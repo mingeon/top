@@ -1,0 +1,171 @@
+<!-- 
+	TmaxSoft One Platform Web Framework Version 1.0.1
+	TOP Action Behavior : Web Component Widget Style Properties Implementation
+-->
+
+
+
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+
+<script>
+	TopActionBehavior = {
+			//  외부에서 Action Behavior 내에 함수를 호출하기 위한  함수(Event Behavior 사용)
+			actionReferecne : function(fn, parameter){
+					return function () {
+        				return fn(parameter);
+   					 };
+			},
+			
+			// Style Action Implementation	
+			styleWidget: function(parameters){
+				var widgetObj = Top.Dom.selectById(parameters.widgetID);
+				var duration = parameters.duration;
+				
+				var cloneParameter ={};
+			
+				for(var key in parameters){	
+					if(key !="widgetID" && key !="duration")
+						cloneParameter[key] = parameters[key];
+				};
+			
+				if (duration != null) {
+					$("#" + parameters.widgetID).attr("style", "position:relative;");
+					$("#" + parameters.widgetID).animate(cloneParameter, duration*1000, function(){});
+				}else {
+					widgetObj.setProperties(cloneParameter);
+				};
+			},
+			
+			// Navigation Action Implementation	
+			navigate: function(parameters){
+				if(parameters.navigateType =="to"){
+					Top.App.routeTo(parameters.targetPage);
+				}else if(parameters.navigateType =="forward"){
+					Top.App.forward();
+				}else if(parameters.navigateType =="back"){
+					Top.App.back();
+					
+				};
+			},
+			
+			// Dialog Action Implementation	
+			showDialog: function(parameters){
+				if(parameters.hasOwnProperty("title") != true) // Dialog Title Setting
+					parameters.title = "Title";
+					
+				if (parameters.hasOwnProperty('dialogLayout')) {// Checking Custom Content Dialog			
+						if(parameters.isConfirmation =="true"){	 // Checking Confirm Dialog
+							 $("#"+"dialog").load(parameters.dialogLayout).dialog({
+							 	modal:true,
+								title: parameters.title,
+							 	buttons: {
+						            "Yes": function () {
+						                 if(parameters.onSuccess!=null){
+											 var sucessFunName = (parameters.onSuccess+"");
+											 window["Logics"][sucessFunName]();
+										};
+										$(this).dialog('close');
+						            },
+						            "No": function () {
+										 if(parameters.onFail!=null){
+											 var failFunName = (parameters.onFail+"");
+											 window["Logics"][failFunName]();
+										};
+										$(this).dialog('close');
+						            }
+						        }
+							 });
+						}else{
+							$("#"+"dialog").load(parameters.dialogLayout).dialog({
+							 	modal:true,
+								title: parameters.title,
+								buttons:null
+							 });
+						}
+				}else{
+					 if(parameters.isConfirmation == "true"){ // Checking Confirm Dialog
+							$("#"+"dialog").html("<p>"+parameters.content+"</p>");
+							$("#"+"dialog").dialog({
+							 	modal:true,
+								title: parameters.title,
+							 	buttons: {
+						            "Yes": function () {
+						                 if(parameters.onSuccess!=null){
+											 var sucessFunName = (parameters.onSuccess+"");
+											 window[sucessFunName]();
+										};		
+										$(this).dialog('close');
+						            },
+						            "No": function () {
+										 if(parameters.onFail!=null){
+											 var failFunName = (parameters.onFail+"");
+											 window["Logics"][failFunName]();
+										};
+										$(this).dialog('close');
+						            }
+						        }
+							 });
+					 }else{
+					 		$("#"+"dialog").html("<p>"+parameters.content+"</p>");
+						 	$("#"+"dialog").dialog({
+								 	modal:true,
+									title: parameters.title,
+								 	buttons : null
+							});
+					 };
+				};
+			},
+			
+			createWidget: function(parameters){
+				var widgetType = parameters.widgetType;
+				var parentId=  parameters.parentID;
+		
+				var cloneParameter = {};
+				
+				for(var key in parameters){	
+					if(key !="widgetType" && key !="parentID")
+						cloneParameter[key] = parameters[key];
+				};
+
+				var createdWidget = Top.Widget.createWidget(widgetType, cloneParameter);
+		
+				Top.Dom.appendChild(parentId, createdWidget);
+			}
+			
+			//추후 아래 Action  지원 여부 결정
+			/* style Change Action Cover
+			moveWidget: function(parameters){
+				var targetObj = document.getElementById(parameters.targetID);
+		
+				if (parameters.duration != null) {
+					targetObj.setAttribute("style", "position:relative");
+					$("#" + parameters.targetID).animate({left : parameters.x, top: parameters.y}, parameters.duration*1000);
+				
+				
+				}else {
+					if (parameters.x != null) 
+						targetObj.setAttribute("left", parameters.x);
+		
+					if(parameters.y != null)
+							targetObj.setAttribute("top", parameters.y);
+				};
+				
+			},
+			*/
+			
+			/*
+			//page Rount API Implemnetation/*
+			showWindow: function(parameters){
+					  window.open(parameters.pageID, '_blank');
+			
+			}
+			*/
+			
+	};
+
+
+   </script>
+
+
+

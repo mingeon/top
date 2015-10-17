@@ -1,0 +1,113 @@
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+<script>
+	TopLayoutBehavior = {
+		properties: {
+			page : String,
+			verticalScroll : {
+				type : String,
+				value : "auto"
+			},
+			horizontalScroll : {
+				type : String,
+				value : "auto"
+			},
+			horizontalAlignment: String,
+			verticalAlignment: String,
+			borderWidth : String,
+			borderStyle : String,
+			borderColor : String,
+			borderRadius : String,
+			borderPadding : String,
+			childs : []
+		},
+	
+		initialChilds : function(){
+			this.childs = $(this).children();	
+			for (var i = 0; i < this.childs.length; i++) {
+				this.childs[i].layoutParent = this;
+			};
+			
+		//console.log("renerLayout");
+				
+		},
+		
+		clearChilds : function(){
+			var myNode = this;
+			while (myNode.firstChild) {
+					  myNode.removeChild(myNode.firstChild);
+			};
+		},
+		
+		updateStyle : function(keys){
+			//console.log(this.id + "1");
+			
+			var layoutRenderFlag = false;
+			
+			
+			
+			if (keys != null) {
+				for (var i = 0; i < keys.length; i++) {
+					this.updateModelbyWidget(keys[i]);
+					
+					if(!layoutRenderFlag){
+						if(keys[i] === "layoutAlignParent" || keys[i] === "layoutRow" || keys[i] === "layoutColumn" || keys[i] === "layoutRowSpan" || keys[i] === "layoutColumnSpan"||
+						   keys[i] === "layoutTop" || keys[i] === "layoutLeft" || keys[i] === "layoutTabName" || keys[i] === "layoutTabIcon"  || keys[i] === "layoutWeight" || keys[i] === "layoutHorizontalAlignment" || keys[i] === "layoutVerticalAlignment" ){
+						   layoutRenderFlag =true;
+						 };
+					 };
+				
+				};		
+				
+				if (layoutRenderFlag) {
+					
+					this.layoutParent.renderLayout();
+				
+				};
+				
+				
+					
+			};
+			
+			
+			if(this.verticalScroll === "true" || this.verticalScroll ===true )
+				this.verticalScroll ="scroll";
+				
+			if(this.horizontalScroll === "true" || this.horizontalScroll ===true )
+				this.horizontalScroll ="scroll";
+		
+			if(this.verticalScroll === "false" || this.verticalScroll ===false )
+				this.verticalScroll ="hidden";
+				
+			if(this.horizontalScroll === "false" || this.horizontalScroll ===false )
+				this.horizontalScroll ="hidden";
+		
+		
+			var bImage ="";
+			
+			if (this.backgroundImage != null) {
+				bImage = "url(" + this.backgroundImage + ")";
+				if (this.tileMode == null) 
+					this.tileMode = "no-repeat";
+			};
+		
+			
+				
+			if (this.borderWidth != null || this.borderColor !=null) {
+				if (this.borderStyle == null) {
+					this.borderStyle = "solid";
+				}
+			};	 
+			
+			this.topstyle = "max-width: "+ this.maxWidth + "; min-width: "+ this.minWidth + "; min-width: "+ this.minWidth + "; max-height: "+ this.maxHeight + "; min-height: "+ this.minHeight + "; background-color: "+this.backgroundColor + "; background-image: " + bImage + "; background-repeat: " + this.tileMode +"; opacity: " + this.opacity+ "; width: " + this.layoutWidth + "; height: " + this.layoutHeight + "; position: relative;" + "left: "+ this.left + "; top: " + this.top + "; right: " + this.right+"; bottom: " 
+						+ this.bottom+ "; margin: " + this.margin +"; padding: " + this.padding + "; visibility:" + this.visible + "; display: block; text-align :"+this.horizontalAlignment+"; vertical-align: "+this.verticalAlignment+";";
+
+			this.topstyle+= "border-width:" + this.borderWidth +"; border-style: " + this.borderStyle + "; border-color:"+ this.borderColor + "; border-radius :" + this.borderRadius +"; border-padding: "+this.borderPadding +"; overflow-x:" + this.horizontalScroll +"; overflow-y: " +this.verticalScroll+";";
+		
+		}		
+	
+		
+	};
+
+   </script>
+

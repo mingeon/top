@@ -1,0 +1,36 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+
+<dom-module id="top-webview">	
+   <template>
+	 		<iframe id="{{id}}" name="{{name}}" src="{{url}}" scrolling="yes" onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" onfocus="{{eventFocused}}" onblur="{{eventLostFocused}}" alt="{{name}}" style$="{{topstyle}}"></iframe>
+   </template>
+   		
+   <script>
+TopWebview=	Polymer({	
+			is : "top-webview", 
+			behaviors : [TopWidgetBehavior],
+		    properties: {
+				url : {
+					type : String,
+					observer : "urlChanged"
+				}
+			},
+				
+			ready:function(){
+				this.updateStyle();	
+			},
+			
+			urlChanged : function(newValue){
+				this.updateModelbyWidget("url");
+			},
+			
+			updateValue : function(){
+			}	
+	});
+    </script>
+</dom-module>
+
+
+
+
+

@@ -1,0 +1,87 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-text-behavior.html">
+
+<dom-module id="top-textarea">	
+  <template>
+		<textarea id="{{id}}" name="{{name}}" value="{{text::input}}" rows="{{rows}}" cols="{{cols}}" placeholder="{{hint}}" onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" onfocus="{{eventFocused}}" onblur="{{eventLostFocused}}"  style$="{{topstyle}}"></textarea>
+  </template>
+</dom-module>
+
+<script>
+TopTextarea = Polymer({
+	is : "top-textarea",
+	behaviors : [TopWidgetBehavior, TopTextBehavior],
+	properties: {
+		hint : String,
+		rows : {
+			type : String,
+			value : "5",
+			observer : 'rowsChanged' 
+		},
+		cols : {
+			type : String,
+			value : "5",
+			observer : 'colsChanged'  
+		},
+		maxLength : {
+			type : Number,
+			observer : "maxsChanged"
+		},
+		readonly : {
+			type : String,
+			observer : "readonlyChanged"
+		},
+		disabled : {
+			type : String,
+			reflectToAttribute : true,
+			observer : "disabledChanged"
+		}	
+    },
+	
+	rowsChanged : function(newValue) {
+	
+	},
+	
+	colsChanged : function(newValue) {
+	
+	},
+	
+	disabledChanged : function(newValue){
+		var shadowInput = Polymer.dom(this.root).querySelector('textarea');
+			
+		if(this.disabled =="true" || this.disabled ==true ){
+			$(shadowInput).attr("disabled", "true");
+		}else{
+			$(shadowInput).removeAttr("disabled");
+		};
+		
+		this.updateModelbyWidget("disabled");
+	},
+
+	maxsChanged : function(){
+		 var textarea = Polymer.dom(this.root).querySelector('textarea'); 
+		 if(this.maxLength != null)
+		  	$(textarea).attr("maxlength", this.maxLength);
+	},
+	
+	readonlyChanged : function() {
+		var textarea = Polymer.dom(this.root).querySelector('textarea');
+		if(this.readonly == "true" || this.readonly == true) {
+			$(textarea).attr("readonly", "");
+		} else {
+			$(textarea).removeAttr("readonly");
+		}
+	},
+
+	ready : function(){			
+		this.updateValue();
+							
+	},
+	
+	updateValue : function(){
+	}
+});	
+</script>
+
+
+

@@ -1,0 +1,52 @@
+<link rel="import" href="../external_library/Polymer/polymer/polymer.html">
+
+
+ 
+<polymer-element name="top-relativelayout" attributes="id name backgroundColor backgroundImage opacity verticalScroll horizontalScroll borderStyle borderWidth borderColor borderRadius borderPadding orientation layoutAlignParent layoutWidth layoutHeight layoutHorizontalAlignment layoutVerticalAlignment layoutRow layoutColumn layoutRowSpan layoutColumnSpan layoutTabName layoutTabIcon layoutTop layoutLeft padding margin visible width height top left bottom right style">
+   <template>	
+   
+   	<div id="{{id}}" name="{{name}}" align="{{layoutHorizontalAlignment}}" style="background-color:{{backgroundColor}}; opacity:{{opacity}}; background-image: {{backgroundImage}}; background-repeat: repeat; width: {{layoutWidth}}; height: {{layoutHeight}}; border-style:{{borderStyle}}; border-width: {{borderWidth}}; border-color: {{borderColor}}; border-radius : {{borderRadius}}; position: relative; left: {{left}}; top: {{top}}; right:{{right}}; bottom:{{bottom}}; padding: {{padding}};  margin:{{margin}}; visibility:{{visible}}; overflow-x:{{horizontalScroll}}; overflow-y:{{verticalScroll}};">
+		<content>
+		</content>
+  	</div>
+  </template>
+  
+
+	
+		
+   <script>
+		Polymer('top-relativelayout', {
+			ready: function(){
+				if(this.backgroundImage != null){
+					this.backgroundImage = "url(resource/"+this.backgroundImage+")";
+				};
+				
+				var border="";
+			
+				if (this.borderWidth != null) {
+					this.borderStyle ="solid";
+				};	 
+			},
+
+			domReady: function(){
+					
+					var layout_children =$("#"+this.id).children();
+					 	console.log(layout_children.length+"");
+						
+					for(var i=0; i<layout_children.length; i++){
+						var layoutTop= $("#"+layout_children[i].id).attr('layoutTop');
+						var layoutLeft= $("#"+layout_children[i].id).attr('layoutLeft');
+						$("#" + layout_children[i].id).wrap("<div style='position: relative; top: " + layoutTop + "; left: " + layoutLeft + ";'></div>");
+						
+						
+					};
+			}	
+				
+		});
+   </script>
+
+
+
+</polymer-element>
+
+

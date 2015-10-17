@@ -1,0 +1,42 @@
+// Badges
+
+@alarm-lg: 70px;
+@alarm-mg: 50px;
+@alarm-sg: 30px;
+
+ .alarmbadge-style(@size: 50px) {
+      width : @size;
+      height :  @size;	
+       img{
+        	width :  @size;
+        	height :  @size;
+       }
+       
+        span{
+            &#tl{
+             position:absolute;
+                top : 0px;
+                left : 0px;
+            }
+            
+            &#tr{
+                 position:absolute;
+                	top : 0px;
+                	left :  (@size - 10);
+            }
+            
+            &#bl{
+                 position:absolute;
+                	top : (@size - 10);
+                	left :  0px;
+            }
+            
+             &#br{
+                 position:absolute;
+                	top : (@size - 10);
+                	left :  (@size - 10);
+            }
+        }
+ }
+ 
+

@@ -1,0 +1,123 @@
+<!-- 
+	TmaxSoft One Platform Web Framework Version 1.0.1
+	TOP Data Behavior : Web Component Widget and Model Two way Data Binding Implementation
+-->
+
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+<script>
+	TopDataBehavior = {
+		properties: {
+			dataModel : { // Data Binding Setting Property 
+				type : null,
+				observer : 'dataModelChanged'
+			},
+			currentData : { // Latest Data Model Save Object  
+				type : Object,	
+				value : {}
+			},
+			dataField : { // Data Model Field  Object
+				type : Object,	
+				value : {}
+			},
+			dataVariable : { // Data Model Variable Object
+				type : Object,	
+				value : {}
+			},
+			dataFlag :{ // Flaog Defence Circular Dependency Call
+				type : Object,
+				value : {}
+			}
+		}, 
+		
+		// Getting Binded Model Value
+		getDataValue: function(variable, fields){
+			var parts = fields
+				parent = variable,
+				i=0;
+			
+			for(i=0; i<parts.length; i+=1){
+				if(typeof parent[parts[i]] ==="undefined"){
+					parent[parts[i]] ={};
+				};
+	
+				parent = parent[parts[i]];
+			};
+	
+			return parent;	
+		},	
+		
+		// Setting DataField, Data Varaible and Widget Refrence in Model	
+		namespaceModel : function(ns_string, key){
+			var parts = ns_string.split('.'),
+				parent = window,
+				i;
+			
+			for(i=0; i<parts.length-1; i+=1){
+				if(typeof parent[parts[i]] ==="undefined"){
+					console.error("Could not find the model name");
+				};
+	
+				parent = parent[parts[i]];
+				
+				if(parts[i+1] == "data"){
+					this.dataVariable[key] = parent;
+					i= i+1;
+					break;
+				};
+			};
+			
+			this.dataField[key] = parts.slice(i+1, parts.length);
+			this.dataVariable[key]["bindWidget"].push([this.dataField[key], this, key]);// Put Widget Reference in Model		
+		},
+		
+		dataModelChanged : function(newObj){
+			if(newObj != null && newObj != String){	
+				var tempData = JSON.parse(newObj); // Parsing Data Binding Property
+				  
+				for(var key in tempData){
+					
+					if(this.currentData[key] != tempData[key]){ // When changed binded model name, Call Namespace Model
+						this.currentData[key] = tempData[key];
+						if (this.currentData[key] != null) {
+								
+							this.namespaceModel(this.currentData[key], key);
+							this.updateWidgetbyModel(key);	
+						};
+					};
+				};
+			};
+		},
+		
+		updateWidgetbyModel: function(key){ // When updated Model value, Widget value change and Call Update style, value(External Plugin Rendering Function ) 
+			if (this.dataVariable.hasOwnProperty(key)) {
+				this.dataFlag[key] = true;
+				this[key] = this.getDataValue(this.dataVariable[key]["data"], this.dataField[key]);
+				// 속성의 유형마다 위젯 Update 함수 호출	
+				if (TopCommonStyleBehavior.hasOwnProperty(key)) {
+					var temp_arrary = [];
+					temp_array.push(key);
+					
+					this.updateStyle(temp_array);
+				}
+				else {
+				//	this.updateValue();
+				};
+			}
+		},
+		
+		updateModelbyWidget: function(key){ // When updated widget value, Model Value Change
+			if (!this.dataFlag[key]) { // Checking Circular Dependency Flag
+				if(this.dataVariable.hasOwnProperty(key))
+					this.dataVariable[key].setValue(this.dataField[key], this[key], this.id);
+			}else{
+				this.dataFlag[key] = false;
+				
+			};
+		}
+	};
+
+   </script>
+
+
+

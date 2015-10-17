@@ -1,0 +1,85 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-layout-behavior.html">
+
+<dom-module id="top-page">
+	<template>
+		<div id="{{id}}" style$="{{style}}"> 
+			<content></content>
+		</div>
+	</template>
+	
+	<script>
+		TopPage = Polymer({
+			is : "top-page",
+			behaviors : [TopWidgetBehavior, TopLayoutBehavior],
+			
+			properties :{
+				id : String,
+				src : String,
+				onLoad : {
+					type : Object,
+					observer : 'onLoadChanged'
+				},
+				onBeforeActivate : {
+					type : Object,
+					observer : 'onBeforeActivateChanged'
+				},
+				onActivate : {
+					type : Object,
+					observer : 'onActivateChanged'
+				},
+				onDeactivate : {
+					type : Object,
+					observer : 'onDeactivateChanged'
+				},
+				visible : {
+					type : String,
+					observer : "visibleChanged"
+				},
+				style : String
+			},
+			
+			srcLoad : function(onSuccess) {
+				var id = this.id;
+				Top.Ajax.get(this.src, "", "", function(data, textStatus, jqXHR) {
+					$("#"+id).append(data);
+					onSuccess();
+				}, "");
+			},
+			
+			onLoadChanged : function (newValue) {
+				if(typeof newValue == 'string') {
+					this.onLoad = Top.Util.namespace(newValue);
+				}
+			},
+			
+			onBeforeActivateChanged : function (newValue) {
+				if(typeof newValue == 'string') {
+					this.onBeforeActivate = Top.Util.namespace(newValue);
+				}
+			},
+			
+			onActivateChanged : function (newValue) {
+				if(typeof newValue == 'string') {
+					this.onActivate = Top.Util.namespace(newValue);
+				}
+			},
+			
+			onDeactivateChanged : function (newValue) {
+				if(typeof newValue == 'string') {
+					this.onDeactivate = Top.Util.namespace(newValue);
+				}
+			},
+			
+			visibleChanged : function(newValue) {
+				this.style = "display: " + newValue + ";";
+			},
+			
+			ready: function() {
+			},
+			
+			updateStyle : function(keys) {
+			}
+		});
+	</script>
+</dom-module>

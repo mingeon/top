@@ -1,0 +1,24 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-resource-behavior.html">
+
+<dom-module id="top-imageview">
+   <template>
+   		
+ 		<img id="{{id}}" src="{{src}}"  onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" onfocus="{{eventFocused}}" onblur="{{eventLostFocused}}" alt="{{description}}" style$="{{topstyle}}"></img>
+   	
+   </template>
+   		
+   <script>
+TopImageview = Polymer({	
+			is : "top-imageview",
+			behaviors : [TopWidgetBehavior, TopResourceBehavior],
+			updateValue : function(){
+			}
+});
+	
+	
+    </script>
+</dom-module>
+
+
+

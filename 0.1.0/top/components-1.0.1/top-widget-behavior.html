@@ -1,0 +1,87 @@
+<!-- 
+	TmaxSoft One Platform Web Framework Version 1.0.1
+	TOP Widget Behavior : Import Base Web Components Beahivor
+-->
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+<link rel="import" href="../components-1.0.1/top-commonstyle-behavior.html">
+<link rel="import" href="../components-1.0.1/top-event-behavior.html">
+<link rel="import" href="../components-1.0.1/top-element-behavior.html">
+<link rel="import" href="../components-1.0.1/top-data-behavior.html">
+<link rel="import" href="../components-1.0.1/top-action-behavior.html">
+
+<link rel="stylesheet" type="text/css" href="../../jquery/jquery.context-2.1.1/jquery.context.css">
+
+<script type="text/javascript" src="../../bootstrap/bootstrap.tooltip-3.3.5/bootstrap.tooltip.js"></script>
+<script type="text/javascript" src="../../jquery/jquery.context-2.1.1/jquery.context.js"></script>
+
+
+<script>
+	TopWidgetBehaviorImpl = {
+		properties: {
+			id: {
+				type : String,
+				reflectToAttribute : true
+			},
+			name: {
+				type : String,
+				reflectToAttribute : true
+			},
+			description : String,
+			value :{
+				type : String,
+				reflectToAttribute : true
+			},
+			tooltip : {
+				type : String,
+				reflectToAttribute : true,
+				observer : "tooltipChanged"
+			}, // Setting String in Tooptip
+			menu : {
+				type : String,
+				reflectToAttribute : true,
+				observer : "menuChanged"
+				
+			},//Setting Context Menu ID
+	
+			layoutParent: {
+				type : String,
+				reflectToAttribute : true
+			},//Setting Parent Layout ID of Widget
+			
+			actionParameter : {
+				type : Object,
+				reflectToAttribute : true
+				
+			},// Setting TOP Action Event Parameter
+			
+			index : {
+				type : String,
+				reflectToAttribute : true
+			},// Widget List Index of Listview
+			
+			position : {
+				type : Object,
+				reflectToAttribute : true
+			}
+		},
+			
+		updateValue: function(){
+		},
+		
+		tooltipChanged: function(newValue){// Tooltip Function Call
+  			$(this).tooltip(); 
+		},
+		
+		menuChanged : function(newValue){ // Context Menu Function Call
+				context.init({preventDoubleContext: false});
+				context.attach('#'+this.id, $("#"+newValue)[0].menuArray);
+		}
+		
+	};
+   //TOP Widget Behavior Import Base Behavior
+	TopWidgetBehavior = [TopWidgetBehaviorImpl, TopElementBehavior, TopDataBehavior, TopCommonStyleBehavior, TopEventBehavior, TopActionBehavior];
+	
+   </script>
+
+
+

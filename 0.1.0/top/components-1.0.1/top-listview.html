@@ -1,0 +1,138 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-container-behavior.html">
+
+<script src="../../jquery/jquery.mobile-1.4.5/jquery.mobile.listview.js"></script>
+
+
+<dom-module id="top-listview">	
+
+   <template>	
+   		 <div id="{{id}}" name="{{name}}" align="{{layoutHorizontalAlignment}}" onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" onfocus="{{eventFocused}}" onblur="{{eventLostFocused}}" style$="{{topstyle}}">
+		<content></content>
+		</div>	
+	
+  
+  </template>
+  
+   <script>
+TopListview = Polymer({
+			is : "top-listview",
+			behaviors : [TopWidgetBehavior, TopContainerBehavior],
+			properties : {
+				rowSelected : {
+					type : String,
+					reflectToAttribute : true
+				}
+			},
+
+			ready: function(){
+				this.initialLayout();
+				this.renderLayout();
+				this.updateStyle();
+			},
+			
+			renderLayout : function() {
+				this.clearLayout();
+				
+				if (this.itemBinding != null) {
+					var layout = this.itemLayout;
+					
+					if(typeof this.items === 'string') {
+						var items = Top.Util.namespace(this.items);
+						if(!Array.isArray(items)) return;
+					} else {
+						return;
+					}
+					
+					var widgetInfo = this.itemBinding.split(',');
+					var widgetId = [];
+					var widgetAttribute = [];
+					var widgetData = [];
+					
+					for(var i = 0; i < widgetInfo.length; i++) {
+						var temp = widgetInfo[i].split(/:|;/);
+						
+						if(temp.length != 3) return console.log("itemBinding Type Error");
+						
+						widgetId[i] = temp[0];
+						widgetAttribute[i] = temp[1];
+						widgetData[i] = temp[2];
+					}
+					
+					for(var i = 0; i < items.length; i++) {
+						$(this).append(layout);
+						
+						if(i == (items.length - 1)) {
+							$(this).children().last().wrapAll("<li id='list_" + i + "' class='ui-li-static ui-body-inherit ui-last-child'></li>");
+						} else {
+							$(this).children().last().wrapAll("<li id='list_" + i + "' class='ui-li-static ui-body-inherit ui-first-child'></li>");
+						}
+						
+					};
+					
+					$(this).children().wrapAll("<ul data-role='listview' data-inset='true' id='listview' class='ui-listview ui-listview-inset ui-corner-all ui-shadow'></ul>");
+					
+					
+					for (var i = 0; i < items.length; i++) {
+						for (var j = 0; j < widgetInfo.length; j++) {
+							var origDataModel = this.querySelector("#list_" + i + " ." + widgetId[j]).getAttribute("data-model");
+							this.querySelector("#list_" + i + " ." + widgetId[j]).setAttribute("index", i);
+							if (origDataModel) {
+								var newDataModel = origDataModel.substring(0, origDataModel.length - 1) + ', "' + widgetAttribute[j] + '":"' + this.items + "." + i + "." + widgetData[j] + '"}';
+								this.querySelector("#list_" + i + " ." + widgetId[j]).setAttribute("data-model", newDataModel);
+							}
+							else {
+								this.querySelector("#list_" + i + " ." + widgetId[j]).setAttribute("data-model", '{"' + widgetAttribute[j] + '":"' + this.items + "." + i + "." + widgetData[j] + '"}');
+							}
+							
+						}
+					};
+		
+					
+						
+					
+				} else if(this.itemField != null) {
+					var itemField = (this.itemField + "");
+					var text = "<ul id='" + this.id + "' data-role='listview' class='ui-listview ui-listview-inset ui-corner-all ui-shadow'>";
+					
+					if(typeof this.items === 'string') {
+						var items = Top.Util.namespace(this.items);
+						if(!Array.isArray(items)) return;
+					} else {
+						return;
+					}
+					
+					for(var i = 0; i < items.length; i++) {
+						if(i == (items.length - 1)) {
+							text += "<li class='ui-li-static ui-body-inherit ui-last-child' index='" + i + "'>";
+							text += items[i][itemField];
+							text += "</li>";
+						}else{
+							text += "<li class='ui-li-static ui-body-inherit ui-first-child' index='" + i + "'>";
+							text += items[i][itemField];
+							text += "</li>";
+						}
+					}
+					text += "</ul>";
+					$(this).append(text);
+					
+					var rowSelected = this.rowSelected;
+					if(typeof rowSelected == 'string') {
+						rowSelected = Top.Util.namespace(rowSelected);
+					}
+					
+					$(this.querySelector('#' + this.id + ' ul')).children('li').on('click', function () {
+						rowSelected($(this).attr('index'));
+					});
+				}
+			}
+	});
+   </script>
+
+
+
+</dom-module>
+
+
+
+

@@ -1,0 +1,63 @@
+<link rel="import" href="../components-1.0.1/top-widget.html">
+<link rel="import" href="../components-1.0.1/top-layout.html">
+
+<dom-module id="top-rowlayout">
+
+   <template>	
+	
+	<div id="{{id}}" align="{{layoutHorizontalAlignment}}" style$="{{style}}">  
+		   <content></content>
+	</div>	
+   </template>
+   
+   <style>
+ 
+   </style>
+   		
+   <script>
+TopLinearlayout = Polymer({
+			is : "top-rowlayout",
+			behaviors : [TopWidget, TopLayout],
+			
+			properties: {
+				orientation :{
+					type : String,
+					value :"horizontal"
+				}		
+			},
+			
+			
+			factoryImpl: function(id) {
+			    	this.id = id;
+			},	
+				
+			
+			ready: function() {
+				
+				this.renderLayout();	
+				this.updateStyle();	 
+	     	},
+			/*
+			attached : function(){
+					console.log("123");
+					
+			},*/
+			
+			renderLayout: function(){
+				var layout_children = $(this).children();	
+								
+				
+					for (var i = 0; i < layout_children.length; i++) {
+					
+						$(layout_children[i]).wrap("<div style='display:inline-block;'></div>");
+					};
+				
+			};
+	
+				
+		});
+   </script>
+
+</dom-module>
+
+

@@ -1,0 +1,44 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-layout-behavior.html">
+
+<dom-module id="top-absolutelayout">	
+   <template>   
+		<div id="{{id}}" name="{{name}}"  style$="{{topstyle}}">
+			<content></content>
+  		</div>
+	</template>
+	<script>
+	TopAbsolutelayout = Polymer({
+				is : 'top-absolutelayout',
+				behaviors : [TopWidgetBehavior, TopLayoutBehavior],
+				ready: function(){	
+					this.initialChilds();		
+					this.renderLayout();
+					
+				},
+				
+				renderLayout : function(){
+					this.clearChilds();
+					
+					for(var i=0; i<this.childs.length; i++)
+						this.appendChild(this.childs[i]);
+						
+					var layout_children =this.childs;
+					var layoutTop, layoutLeft="0px";
+					
+					for(var i=0; i<layout_children.length; i++){
+				
+						if (layout_children[i].getAttribute("layout-top") != null) {
+							layoutTop = layout_children[i].getAttribute("layout-top");
+							layoutLeft = layout_children[i].getAttribute("layout-left");
+						}else{
+							layoutTop = layout_children[i].layoutTop;
+							layoutLeft = layout_children[i].layoutLeft;
+						};
+	
+						$(layout_children[i]).wrap("<div style='position: absolute; top: "+layoutTop+"; left: "+layoutLeft+";'></div>")
+					};
+				}
+			}); 
+   </script>
+</dom-module>

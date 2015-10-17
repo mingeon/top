@@ -1,0 +1,42 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-resource-behavior.html">
+
+<dom-module id="top-imagebutton">	
+   <template>
+		  <input type="image" id="{{id}}" src="{{src}}" alt="{{description}}" onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" onfocus="{{eventFocused}}" onblur="{{eventLostFocused}}" style$="{{topstyle}}">
+   </template>
+   		
+   <script>
+TopImagebutton = Polymer({
+		is : "top-imagebutton",
+		behaviors : [TopWidgetBehavior, TopResourceBehavior],
+		properties : {
+			disabled : {
+				type : String,
+				reflectToAttribute : true,
+				observer : "disabledChanged"
+			}
+		},	
+		
+		disabledChanged : function(newValue){
+			var shadowInput = Polymer.dom(this.root).querySelector('input');	
+			if(this.disabled =="true" || this.disabled ==true ){
+				$(shadowInput).attr("disabled", "true");
+			}else{
+				$(shadowInput).removeAttr("disabled");
+			};
+			this.updateModelbyWidget("disabled");
+		},
+		
+		ready : function(){			
+		},
+		
+		updateValue : function(){
+		}
+});   	
+	
+
+    </script>
+</dom-module>
+
+

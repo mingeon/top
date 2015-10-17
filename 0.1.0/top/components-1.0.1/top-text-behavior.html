@@ -1,0 +1,32 @@
+<!-- 
+	TmaxSoft One Platform Web Framework Version 1.0.1
+	TOP Text Behavior : Text Properties and TextObservser
+-->
+
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+<script>
+	TopTextBehavior = {
+		properties: {
+			text: {
+				type : String,
+				observer: 'textChanged'
+			},
+			textSize: String,
+			textColor: String,
+			textStyle: String,
+			textWeight : String
+		},
+		
+		textChanged : function(newValue){
+			if(this.localName != "top-radiobutton" && this.localName != "top-checkbox")
+				this.value = newValue;
+			
+		
+			this.updateModelbyWidget("text");
+		}
+	};
+  </script>
+
+
+

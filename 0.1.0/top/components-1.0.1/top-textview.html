@@ -1,0 +1,29 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-text-behavior.html">
+
+<dom-module id="top-textview">
+   <template>
+
+   			<p id="{{id}}" name="{{name}}" onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" style$="{{topstyle}}">
+   			<span>{{text}}</span>
+			</p>				
+			
+   </template>
+   		
+   <script>
+
+TopTextview =Polymer({
+			is: 'top-textview',
+			behaviors : [TopWidgetBehavior, TopTextBehavior]
+	
+});
+   </script>
+</dom-module>
+ 
+ 
+
+  
+ 
+  
+
+  

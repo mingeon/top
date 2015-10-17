@@ -1,0 +1,200 @@
+<!-- 
+	TmaxSoft One Platform Web Framework Version 1.0.1
+	TOP Event Behavior : Web Component Widget Event Type Implementation
+-->
+
+
+
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+<script>
+	TopEventBehavior = {
+		properties: { // Event Type Properties 
+			eventMouseClick: {
+				type : Function,
+				observer: 'mouseClickChanged'
+			},
+			eventMouseEnter:  {
+				type : String,
+				observer: 'mouseEnterChanged'
+			},
+			eventMouseExit: {
+				type : String,
+				observer: 'mouseExitChanged'
+			},
+			eventMouseMove: {
+				type : String,
+				observer: 'mouseMoveChanged'
+			},
+			eventMousePressed: {
+				type : String,
+				observer: 'mousePressedChanged'
+			},
+			eventMouseReleased: {
+				type : String,
+				observer: 'mouseReleasedChanged'
+			},
+			eventKeyPressed: {
+				type : String,
+				observer: 'keyPressedChanged'
+			},
+			eventKeyReleased: {
+				type : String,
+				observer: 'keyReleasedChanged'
+			},
+			eventKeyTyped: {
+				type : String,
+				observer: 'keyTypedChanged'
+			},
+			eventFocused: {
+				type : String,
+				observer: 'focuseChanged'
+			},
+			eventLostFocused: {
+				type : String,
+				observer: 'lostFocuseChanged'
+			},
+			eventChanged : {
+				type : String,
+				observer : 'eventValueChanged'
+			}
+		},
+		
+		eventValueChanged : function(newValue){
+			var tempFunName = newValue;	
+			tempFunName = (tempFunName + "").split('.');
+			if ((tempFunName[0].toLowerCase())== 'action') { // Checking Action Function
+				this.eventChanged = this.actionReferecne(this[tempFunName[1]], this.actionParameter);
+			}else if(typeof newValue == 'string'){ // Checking Function name String
+				this.eventChanged = Top.Util.namespace(newValue); // Setting Function Object
+			};
+		}, 
+		
+		mouseClickChanged : function(newValue){
+			var tempFunName = newValue;	
+			tempFunName = (tempFunName + "").split('.');
+			
+			if ((tempFunName[0].toLowerCase())== 'action') {
+				this.eventMouseClick = this.actionReferecne(this[tempFunName[1]], this.actionParameter);
+			}else if(typeof newValue == 'string'){
+				this.eventMouseClick = Top.Util.namespace(newValue);
+			};
+		},
+		
+		mouseEnterChanged : function(newValue){
+			var tempFunName = newValue;	
+			tempFunName = (tempFunName + "").split('.');
+		
+			if ((tempFunName[0].toLowerCase())== 'action') {
+				this.eventMouseEnter = this.actionReferecne(this[tempFunName[1]], this.actionParameter);
+			}else if(typeof newValue == 'string'){
+				this.eventMouseEnter = Top.Util.namespace(newValue);
+			};
+		},
+		
+		mouseExitChanged : function(newValue){
+			var tempFunName = newValue;	
+			tempFunName = (tempFunName + "").split('.');
+		
+			if ((tempFunName[0].toLowerCase())== 'action') {	
+				this.eventMouseExit = this.actionReferecne(this[tempFunName[1]], this.actionParameter);	
+			}else if(typeof newValue == 'string'){
+				this.eventMouseExit = Top.Util.namespace(newValue);
+			};
+		},
+		
+		mouseMoveChanged : function(newValue){
+			var tempFunName = newValue;	
+			tempFunName = (tempFunName + "").split('.');
+		
+			if ((tempFunName[0].toLowerCase())== 'action') {	
+				this.eventMouseMove = this.actionReferecne(this[tempFunName[1]], this.actionParameter);
+			}else if(typeof newValue == 'string'){
+				this.eventMouseMove = Top.Util.namespace(newValue);
+			};
+		},
+		
+		mousePressedChanged : function(newValue){
+			var tempFunName = newValue;	
+			tempFunName = (tempFunName + "").split('.');
+		
+			if ((tempFunName[0].toLowerCase())== 'action') {
+				this.eventMousePressed = this.actionReferecne(this[tempFunName[1]], this.actionParameter);
+			}else if(typeof newValue == 'string'){
+				this.eventMousePressed = Top.Util.namespace(newValue);
+			};
+		},
+		
+		mouseReleasedChanged : function(newValue){
+			var tempFunName = newValue;	
+			tempFunName = (tempFunName + "").split('.');
+		
+			if ((tempFunName[0].toLowerCase())== 'action') {
+				this.eventMouseReleased = this.actionReferecne(this[tempFunName[1]], this.actionParameter);
+			}else if(typeof newValue == 'string'){
+				this.eventMouseReleased = Top.Util.namespace(newValue);
+			};
+		},
+		
+		keyPressedChanged : function(newValue){
+			var tempFunName = newValue;	
+			tempFunName = (tempFunName + "").split('.');
+	
+			if ((tempFunName[0].toLowerCase())== 'action') {
+				this.eventKeyPressed  = this.actionReferecne(this[tempFunName[1]], this.actionParameter);
+			}else if(typeof newValue == 'string'){
+				this.eventKeyPressed = Top.Util.namespace(newValue);
+			};
+		},
+		
+		keyTypedChanged : function(newValue){
+			var tempFunName = newValue;	
+			tempFunName = (tempFunName + "").split('.');
+		
+			if ((tempFunName[0].toLowerCase())== 'action') {
+				this.eventKeyTyped = this.actionReferecne(this[tempFunName[1]], this.actionParameter);
+			}else if(typeof newValue == 'string'){
+				this.eventKeyTyped = Top.Util.namespace(newValue);
+			};
+		},	
+		
+		keyReleasedChanged : function(newValue){
+			var tempFunName = newValue;	
+			tempFunName = (tempFunName + "").split('.');
+		
+			if ((tempFunName[0].toLowerCase())== 'action') {
+				this.eventKeyReleased  = this.actionReferecne(this[tempFunName[1]], this.actionParameter);	
+			}else if(typeof newValue == 'string'){
+				this.eventKeyReleased = Top.Util.namespace(newValue);
+			};
+		},
+		
+		focuseChanged : function(newValue){
+			var tempFunName = newValue;	
+			tempFunName = (tempFunName + "").split('.');
+		
+			if ((tempFunName[0].toLowerCase())== 'action') {
+				this.eventFocused= this.actionReferecne(this[tempFunName[1]], this.actionParameter);
+			}else if(typeof newValue == 'string'){
+				this.eventFocused = Top.Util.namespace(newValue);
+			};
+		},
+		
+		lostFocuseChanged : function(newValue){
+			var tempFunName = newValue;	
+			tempFunName = (tempFunName + "").split('.');
+		
+			if ((tempFunName[0].toLowerCase())== 'action') {
+				this.eventLostFocused = this.actionReferecne(this[tempFunName[1]], this.actionParameter);
+			}else if(typeof newValue == 'string'){
+				this.eventLostFocused = Top.Util.namespace(newValue);
+			};
+		}
+		
+		
+	};
+
+   </script>
+
+
+

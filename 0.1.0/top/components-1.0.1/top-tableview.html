@@ -1,0 +1,247 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-container-behavior.html">
+
+<script src="../../jquery/jquery.datatables-1.10.7/jquery.datatables.js"></script>
+<script src="../../jquery/jquery.datatables-1.10.7/jquery.jsontohtmltable.js"></script>
+<dom-module id="top-tableview">	
+   <template>
+   		<div id="{{id}}" name="{{name}}"  onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" onfocus="{{eventFocused}}" onblur="{{eventLostFocused}}" style$="{{topstyle}}">			
+			<content>
+			</content>
+		</div>
+   </template>
+ 
+   <script>
+TopTableview = Polymer({
+			is : "top-tableview",
+			behaviors : [TopWidgetBehavior, TopContainerBehavior],
+			properties : {
+				tbody : {
+					type : String,
+					value : ""
+				},
+				thead : {
+					type : String,
+					value : ""
+				},
+				tfoot : {
+					type : String,
+					value : ""
+				},
+				pageLength : {
+					type : Number,
+					value : 20
+				},
+				paginate : {
+					type : Boolean,
+					value : false
+				},
+				dataTable : {
+					type : Object
+				},
+				orientation : {
+					type : String,
+					value : "horizontal"
+				},
+				rowSelected : {
+					type : String,
+					reflectToAttribute : true
+				}
+			},
+			
+			ready: function(){
+				this.initialLayout();
+				this.templateParsing();
+				this.updateStyle();		
+				this.renderLayout();
+			},
+			
+			templateParsing : function(){
+				if (this.itemLayout != null) {
+					var layout_child_len = this.itemLayoutChilds.length;
+					for (var i = 0; i < layout_child_len; i++) {
+						if ($(this.itemLayoutChilds[i]).get(0).tagName == "THEAD") {
+							this.thead = $(this.itemLayoutChilds[i]).get(0).outerHTML;
+						} else {
+							this.tbody = $(this.itemLayoutChilds[i]).get(0).innerHTML;
+						}
+					}
+				}
+			},
+			
+			renderLayout : function(){
+				this.clearLayout();
+				if (this.items != null) {
+					if (this.itemBinding != null) {
+						if (typeof this.items === 'string') {
+							var obj = Top.Util.namespace(this.items);
+							if(!Array.isArray(obj)) return;
+						} else {
+							return;
+						}
+						var colInfo = this.itemBinding.split(',');
+						var col = [];
+						var colAttribute = [];
+						var colData = [];
+						var colWidget = [];
+						if(this.thead) {
+							this.innerHTML = '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">' + this.thead + '<tbody class="body"></tbody></table>';
+						} else {
+							this.thead = '<thead><tr>';
+							for(var i = 0; i < colInfo.length; i++) {
+								var headName = colInfo[i].split(/:|;/)[2];
+								this.thead += '<th>' + headName + '</th>';
+							}
+							this.thead += '</tr></thead>';
+							this.innerHTML = '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">' + this.thead + '<tbody class="body"></tbody></table>';
+						};
+						var tablebodyRoot = this.querySelector("#" + this.id + " .body");
+						for (var j = 0; j < colInfo.length; j++) {
+							col = colInfo[j].split(/:|;/);
+							/* modified 15.10.01 "col.length == 2" ?
+							if (col.length == 2) { // without binded widget
+								colWidget[j] = col[0];
+								colAttribute[j] = null;
+								colData[j] = col[1];
+								//$("#"+this.id+" .row"+i+" ."+col[0]).html(obj[i][colData[j]]);
+							} else if (col.length == 3) { // with binded widget
+								colWidget[j] = col[0];
+								colAttribute[j] = col[1];
+								colData[j] = col[2];
+							}
+							*/
+							if (col.length == 3) { // with binded widget
+								colWidget[j] = col[0];
+								colAttribute[j] = col[1];
+								colData[j] = col[2];
+							}
+						};
+						for (var i = 0; i < obj.length; i++) {
+							$(tablebodyRoot).append(this.tbody);
+							var targetRow = $(($(tablebodyRoot).children()[i]));
+							for (var j = 0; j < colInfo.length; j++) {
+								if (colAttribute[j] == null) { // without binded widget
+									targetRow.find("."+colWidget[j]).html(obj[i][colData[j]]);
+								} else { // with binded widget
+									targetRow.find("."+colWidget[j]).attr("data-model", '{"' + colAttribute[j] + '":"' + this.items + "." + (i) + "." + colData[j] + '"}');
+								}
+								targetRow.find("."+colWidget[j]).attr("position", '{"row":"' + i + '", "col":"' + j + '"}');
+							}
+						}
+						this.dataTable = $(this.querySelector("#" + this.id + ' table')).dataTable({
+							"bPaginate":  this.paginate,
+							"pageLength" : this.pageLength,
+							"bFilter": false,
+							"bInfo": false,
+							"autoWidth": false
+						});
+					} else {
+						if(!this.itemField) {
+							this.itemField = 'all';
+						}
+						if (this.orientation == 'vertical') {
+							if (typeof this.items === 'string') {
+								var obj = Top.Util.namespace(this.items);
+								if(!Array.isArray(obj)) return;
+							} else {
+								return;
+							}							
+							this.tbody = jsonToHTMLTable(obj, 'vertical');
+							this.innerHTML = '<div id="example_wrapper" class="dataTables_wrapper no-footer"><table cellpadding="0" cellspacing="0" border="0" class="dataTable no-footer cell-border" id="example" role="grid">' + this.tbody + '</table></div>';
+						} else if (this.orientation == "horizontal") {
+							var colTitle = [];
+							var itemField = (this.itemField + "").split(',');
+							if (this.thead) {
+								this.innerHTML = '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">' + this.thead + '</table>';
+							} else {
+								this.innerHTML = '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>';
+							}
+							var arr = [];
+							if (typeof this.items === 'string') {
+								var obj = Top.Util.namespace(this.items);
+								if(!Array.isArray(obj)) return;
+							} else {
+								return;
+							}
+							if (itemField[0] == "all" && obj[0])
+								itemField = Object.keys(obj[0]);
+							for (var i = 0; i < itemField.length; i++) {
+								colTitle[i] = {
+									"title": itemField[i]
+								}
+							}
+							for (var i = 0; i < obj.length; i++) {
+								var temp = [];
+								for (var j = 0; j < itemField.length; j++) {
+									temp[j] = obj[i][itemField[j]];
+								}
+								arr[i] = temp;
+							}
+							this.dataTable = $(this.querySelector("#" + this.id + ' table')).dataTable({
+								"data": arr,
+								"columns": colTitle,
+								"bPaginate": this.paginate,
+								"bFilter": false,
+								"bInfo": false,
+								"autoWidth": false,
+								"pageLength": this.pageLength
+							});
+						}
+					}
+				} else {
+					if(this.orientation == "vertical"){
+						this.innerHTML = '<div id="example_wrapper" class="dataTables_wrapper no-footer"><table cellpadding="0" cellspacing="0" border="0" class="dataTable no-footer cell-border" id="example" role="grid">' + this.tbody + '</table></div>';
+					} else {
+						this.innerHTML = '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example">' + this.thead +this.tbody+ '</table>';
+						this.dataTable = $(this.querySelector("#" + this.id + ' table')).dataTable({
+							"bPaginate":  this.paginate,
+							"pageLength" : this.pageLength,
+							"bFilter": false,
+							"bInfo": false,
+							"autoWidth": false
+						});
+					}
+				}
+				if(this.dataTable) {
+					var table = $(this.querySelector("#" + this.id + ' table')).DataTable();
+					var rowSelected = this.rowSelected;
+					if(!rowSelected) return;
+					if(typeof rowSelected == 'string') {
+						rowSelected = Top.Util.namespace(rowSelected);
+					}
+					this.dataTable.on('click', 'tr', function() {
+						var selected = false;
+						if($(this).hasClass('selected')) {
+							$(this).removeClass('selected');
+							selected = false;
+						} else {
+							table.$('tr.selected').removeClass('selected');
+							$(this).addClass('selected');
+							selected = true;
+						}
+						var index = table.row(this).index();
+						if(typeof index != 'undefined') rowSelected(index, selected);
+					});
+				}
+			},
+			
+			page : function(targetPage){ // next previous first last integer
+				this.dataTable.fnPageChange(targetPage);
+			},
+			
+			pageLen : function(length){ // -1  or  integer
+				this.dataTable.fnSettings()._iDisplayLength = length;
+				this.dataTable.fnDraw();
+			},
+			
+			dataSort : function(category){
+				this.dataTable.fnSort(category);
+			}
+	});
+   </script>
+
+</dom-module>
+
+
+
+

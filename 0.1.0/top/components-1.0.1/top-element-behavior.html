@@ -1,0 +1,88 @@
+<!-- 
+	TmaxSoft One Platform Web Framework Version 1.0.1
+	TOP Element Behavior : Web Component Widget Element Lifecycle Event Implementation
+	Lifecycle - Created -> Ready -> Attach -> Detach -> Removed
+-->
+
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+<script>
+	TopElementBehavior = {
+		properties: {
+			onDetach: {
+				type: String,
+				observer : 'onDetachChanged'
+			}, 
+			onAttach : {
+				type: String,
+				observer : 'onAttachChanged'
+			} // Setting Lifecycle DOM Tree Attached and Detached Event Name
+		},
+		
+		onDetachChanged : function(newValue){
+			if(typeof newValue == 'string'){
+				this.onDetach = Top.Util.namespace(newValue);
+			};
+		},
+		
+		onAttachChanged : function(newValue){
+			if(typeof newValue == 'string'){
+				this.onAttach = Top.Util.namespace(newValue);
+			};
+		},	
+			
+		factoryImpl: function() { // Web Component Constructor Function 		
+		},
+	
+		created : function(){	// Initialize Data Binding Variable and Reference			
+			this.currentData ={};
+			this.dataObj ={};
+			this.dataField ={};
+			this.dataVariable ={};
+			this.dataFlag = false;
+			
+		},
+	
+		ready: function(){ 
+			// if ID is null, Setting Random GUID
+			if(!this.id) {
+				this.id = Top.Util.guid();
+			};
+			// Setting  Removed Event Trigger
+			$(this).on("remove",this.removed);
+			// Serialize and Setting TOP Widget Style Attribute 
+			this.updateStyle();
+		},
+			
+		removed : function(){ // When deleted widget element, Delete Widget Refernce Element in Model		
+				for (var model in this.dataVariable) {
+					for (var i = 0; i < this.dataVariable[model]["bindWidget"].length; i++) {
+						if (this.id === this.dataVariable[model]["bindWidget"][i][1].id) {
+							this.dataVariable[model]["bindWidget"].splice(i, 1);
+							break;
+						};
+					};
+				};
+		},
+		
+		attached: function(newValue){
+			if(typeof this.onAttach === 'function'){
+				this.onAttach();
+			};
+			Top.App.callbackAttach(this.id);
+		},
+		
+		detached : function(newValue){
+			if(typeof this.onDetach === 'function'){
+				this.onDetach();
+			};
+			Top.App.callbackDetach(this.id);
+		}
+		
+		
+	};
+
+   </script>
+
+
+

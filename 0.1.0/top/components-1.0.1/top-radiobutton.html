@@ -1,0 +1,53 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-text-behavior.html">
+<link rel="import" href="../components-1.0.1/top-check-behavior.html">
+
+<dom-module id="top-radiobutton">
+  <template>
+  
+		<label for="{{id}}" style$="{{topstyle}}"><input type="radio" id="{{id}}" name="{{groupId}}" value="{{text}}" checked="{{checked::change}}" onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" onfocus="{{eventFocused}}" onblur="{{eventLostFocused}}">{{text}}</label>
+					
+ 
+   </template>
+   		
+   <script>
+	
+TopRadiobutton	= Polymer({
+				is : "top-radiobutton",
+				behaviors : [TopWidgetBehavior, TopTextBehavior, TopCheckBehavior],
+				properties : {
+					disabled : {
+						type : String,
+						reflectToAttribute : true,
+						observer : "disabledChanged"
+					}
+				},
+				
+				disabledChanged : function(newValue){
+					var shadowInput = Polymer.dom(this.root).querySelector('input');
+					var shadowLabel = Polymer.dom(this.root).querySelector('label');
+						
+					if(this.disabled =="true" || this.disabled ==true ){
+						$(shadowInput).attr("disabled", "true");
+						$(shadowLabel).attr("disabled", "true");
+					}else{
+						$(shadowInput).removeAttr("disabled");
+						$(shadowLabel).removeAttr("disabled");	
+					};
+					
+					this.updateModelbyWidget("disabled");
+				},
+				
+				ready : function(){
+					this.updateValue();
+				},
+				
+				updateValue : function(){
+				}
+			
+});	
+    </script>
+</dom-module>
+
+
+

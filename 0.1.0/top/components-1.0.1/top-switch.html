@@ -1,0 +1,106 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-check-behavior.html">
+
+<script type="text/javascript" src="../../bootstrap/bootstrap.switch-3.3.2/bootstrap.switch.js"></script>	
+
+<dom-module id="top-switch">	
+  <template>	
+   	      <input id="{{id}}" type="checkbox" checked data-on-text="{{textOn}}" checked="{{checked::change}}" data-off-text="{{textOff}}" onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" onfocus="{{eventFocused}}" onblur="{{eventLostFocused}}" >
+  </template>
+  
+   <script>
+TopSwitch = Polymer({
+			is : "top-switch",
+			behaviors : [TopWidgetBehavior, TopCheckBehavior],
+			properties : {
+				textOn : {
+					type : String,
+					value : "On",
+					observer : "textonChanged"
+				},
+				textOff : {
+					type : String,
+					value : "Off",
+					observer : "textoffChanged"
+				},
+				disabled : {
+					type : String,
+					reflectToAttribute : true,
+					observer : "disabledChanged"
+				},
+				button : Object
+			},
+			
+			textonChanged : function(newValue){
+				this.updateModelbyWidget("textOn");
+			},
+			
+			textoffChanged : function(newValue){
+				this.updateModelbyWidget("textOff");
+			},
+			
+			disabledChanged : function(newValue){
+				if(typeof newValue == "string"){
+					if(newValue ===" true"){
+						this.disabled = true;
+					}else{
+						this.disabled = false;
+					}
+				};
+				
+				this.updateModelbyWidget("disabled");
+			},
+			
+			ready : function(){
+				this.updateValue();
+			},
+			
+			updateValue : function(){
+				var shadowInput = Polymer.dom(this.root).querySelector('input');
+				
+				$(shadowInput).bootstrapSwitch('destroy');
+				
+				this.button = $(shadowInput).bootstrapSwitch({
+						onText: this.textOn,
+						offText: this.textOff,
+						labelWidth : this.layoutWidth,
+						disabled : this.disabled,
+						state : this.checked,		
+						topstyle :this.topstyle
+						
+				});
+		
+				var obj = this;
+				
+				$(shadowInput).on('switchChange.bootstrapSwitch', function(event, state) {
+					obj.checked =state;
+				});
+					
+				$(document).on('click.bs.toggle', "top-switch#"+this.id, function(e) {
+					$(shadowInput).bootstrapSwitch('toggle')
+					e.preventDefault();
+				});
+			},
+			
+			toggleOn : function(){
+				var shadowInput = Polymer.dom(this.root).querySelector('input');			
+				$(shadowInput).bootstrapSwitch('state', true);
+
+			},
+			
+			toggleOff : function(){
+				var shadowInput = Polymer.dom(this.root).querySelector('input');
+				$(shadowInput).bootstrapSwitch('state', false);
+
+			}		
+					
+	});
+   </script>
+
+
+
+</dom-module>
+
+
+
+

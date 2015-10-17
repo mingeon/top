@@ -1,0 +1,172 @@
+// TOP Web Framework 
+// Table :  Base JQuery Data Table(Base DataTable : https://www.datatables.net/) 
+// Base Style Sheets Less File version 1.0.1--------------------------------------
+
+table {
+  background-color: @table-bg;
+}
+caption {
+  padding-top: @table-cell-padding;
+  padding-bottom: @table-cell-padding;
+  color: @text-muted;
+  text-align: left;
+}
+th {
+  text-align: left;
+}
+
+
+// Baseline styles
+
+top-tableview table.dataTable {
+    
+      width: 100%;
+      margin: 0 auto;
+      clear: both;
+      border-collapse: separate;
+      border-spacing: 0;
+      
+      tfoot{
+        th, td{
+            font-weight: bold;
+            padding: 10px 18px 6px 18px;
+            border-top: 1px solid #111;
+        } 
+      }
+      
+      thead{
+            th, td{
+                font-weight: bold;
+                padding: 10px 18px;
+                border-bottom: 2px solid @table-border-color;
+                 &:active{
+                    outline: none;
+                }
+            }
+            
+            .sorting_asc, .sorting_desc, .sorting_asc_disabled, .sorting_desc_disabled{
+                 background-repeat: no-repeat;
+                 background-position: center right;
+            }
+            
+            .sorting{
+                background-image: url("../css-1.0.1/images/sort_both.png");
+                background-repeat: no-repeat;
+                background-position: center right;
+            }
+            
+            .sorting_asc{
+                background-image: url("../css-1.0.1/images/sort_asc.png");
+            }
+            
+            .sorting_desc{
+                background-image: url("../css-1.0.1/images/sort_desc.png");
+            }
+            
+            .sorting_asc_disabled{
+                background-image: url("../css-1.0.1/images/sort_asc_disabled.png");
+            }
+            
+            .sorting_desc_disabled{
+                background-image: url("../css-1.0.1/images/sort_desc_disabled.png");
+                
+            }
+     }
+     
+    tbody{
+        tr{
+             background-color: #ffffff;
+        }
+        
+        tr.selected{
+             background-color: #B0BED9;
+        }
+        
+        th, td{
+             padding: 8px 10px;
+        }
+    }
+    
+}
+
+top-tableview table.dataTable.row-border{
+        tbody{
+            th, td{
+                  border-top: 1px solid @table-border-color;
+            }
+            
+            tr:first-child th, tr:first-child td{
+                 border-top: none;
+            
+            }
+        }
+}
+
+top-tableview table.dataTable.display{
+        tbody{
+            th, td{
+                  border-top: 1px solid #ddd;
+            }
+            
+            tr:first-child th, tr:first-child td{
+            
+                 border-top: none;
+            }
+        
+        }
+}
+
+    
+   
+    
+top-tableview table.dataTable.cell-border{
+        tbody{
+            th{
+                  border-right: 2px solid #ddd;
+            }
+            
+            td{
+              
+                  border-right: 1px solid #ddd;
+            }
+            
+            tr th:first-child, tr td:first-child{
+                 border-left: 1px solid #ddd;
+            }
+            
+            tr:frist-child th, tr:first-child td{
+                border-top: none;
+            }
+            
+            tr{
+                border: 0px solid #ddd;
+            }
+        }
+}
+    
+top-tableview table.dataTable.stripe, top-tableview table.dataTable.display{
+    tbody{
+        tr.odd{
+        
+             background-color: #f9f9f9;
+        }
+        
+        tr.odd.selected{
+            background-color: #abb9d3;
+        }
+    }
+            
+}
+   
+top-tableview table.dataTable.hover tbody tr:hover, top-tableview table.dataTable.display{
+     tbody{
+         tr:hover{
+             background-color: whitesmoke;
+         }
+         
+         tr:hover.selected{
+            background-color: #a9b7d1;
+         }
+     }
+ }
+ 

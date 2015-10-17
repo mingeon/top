@@ -1,0 +1,33 @@
+
+
+
+#viewport {
+/*  width:100px;*/
+  padding: 100px;
+  background: #eee;
+}
+
+.container {
+  border:5px solid lightblue;
+    /* to get height set properly when elements float */
+}
+
+.container div {
+  width: 30px;
+  height: 30px;
+  background-color: lightblue;
+  margin: 10px;
+  border:1px solid darkblue;
+  padding: 20px;
+  font-family: 'helvetica';
+  font-weight: bold;
+  
+/*  float:left;*/
+
+  /* for fun */
+/*  -webkit-transition:all 0.4s ease-in-out;
+  -moz-transition:all 0.4s ease-in-out;
+  -o-transition:all 0.4s ease-in-out;
+  transition:all 0.4s ease-in-out;*/
+}
+

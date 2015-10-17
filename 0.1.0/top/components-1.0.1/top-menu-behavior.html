@@ -1,0 +1,47 @@
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+<script>
+	TopMenuBehavior = {
+		properties: {
+				id : {
+					type : String,
+					reflectToAttribute: true
+				},
+				menuItems : []
+				
+		},
+		
+		ready : function() {
+			if(!this.id) {
+				this.id = Top.Util.guid();
+			}
+		},
+		
+		initialMenuItems : function(){
+				this.menuItems = $(this).children();
+				for (var i = 0; i < this.menuItems.length; i++) {
+					this.menuItems[i].menuWidget = this;
+				};
+		},
+		
+		clearMenuItems : function(){
+			var myNode = this;
+			while (myNode.firstChild) {
+					  myNode.removeChild(myNode.firstChild);
+			};
+		},
+		updateStyle : function(){
+				
+		},
+		updateValue : function(){
+				
+		}
+			
+		
+		
+	};
+
+   </script>
+
+
+

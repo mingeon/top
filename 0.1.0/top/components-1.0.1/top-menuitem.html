@@ -1,0 +1,89 @@
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+<dom-module id="top-menuitem">	
+   <template>	
+		<content>	
+		</content>
+  </template>
+  
+   <script>
+TopMenuitem = Polymer({
+			is : "top-menuitem",
+			properties: {
+				id : String,
+				text : {
+					type : String,
+					reflectToAttribute : true
+				
+				},
+				href: String,
+				route: String,
+				menuWidget : Object,
+				subMenuItems : [],
+				divider : {
+					type : String,
+					value : "false"
+				}
+			},
+			ready : function(){
+				this.initSubMenuItem();
+				this.updateSubMenuItem();
+	
+				
+			},
+			
+			initSubMenuItem : function(){
+				this.subMenuItems = $(this).children();
+				for (var i = 0; i < this.subMenuItems.length; i++) {
+					this.subMenuItems[i].menuWidget = this.menuWidget;
+				};
+				
+			},
+			
+			getSubMenuItem : function(){
+				return this.subMenuItems;
+			},
+			
+			clearSubMenuItem : function(){
+					var myNode = this;
+					while (myNode.firstChild) {
+							  myNode.removeChild(myNode.firstChild);
+					};
+			},
+			
+			updateSubMenuItem: function(){
+				this.clearSubMenuItem();
+				
+					
+				this.childText ="";
+					
+					
+				for (var i = 0; i < this.subMenuItems.length; i++) {
+				//	console.log(this.subItems[i].getAttribute("text"));
+					this.appendChild(this.subMenuItems[i]);
+					
+				};
+				
+			
+				
+			},
+			
+			
+			
+			updateStyle : function(){
+				
+			},
+			
+			updateValue : function(){
+				if(this.groupWidget) {
+					this.groupWidget.updateValue();
+				}
+			}
+			
+		});
+   </script>
+</dom-module>
+
+
+
+

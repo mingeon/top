@@ -1,0 +1,102 @@
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+<dom-module id="top-widgetitem">	
+   <template>	
+		<content>	
+		</content>
+  </template>
+  
+   <script>
+TopWidgetitem = Polymer({
+			is : "top-widgetitem",
+			properties: {
+				id : {
+					type : String,
+					reflectToAttribute: true
+				},
+				caption : String,
+				src:{
+					type : String,
+					reflectToAttribute: true
+				},
+				text:  {
+					type : Object,
+					reflectToAttribute: true
+				},
+				href : {
+					type : String,
+					reflectToAttribute: true
+				},
+				subItems :[],
+				groupWidget : Object,
+				eventMouseClick : {
+					type : Function,
+					reflectToAttribute: true
+				}
+			},
+			
+			ready : function(){
+				this.initSubItem();
+				this.updateSubItem();
+			
+				
+				
+			},
+	
+			initSubItem : function(){
+				this.subItems = $(this).children();
+				for (var i = 0; i < this.subItems.length; i++) {
+					this.subItems[i].groupWidget = this.groupWidget;
+				};
+				
+			},
+			
+			getSubItem : function(){
+				return this.subItems;
+			},
+			
+			clearSubItem : function(){
+					var myNode = this;
+					while (myNode.firstChild) {
+							  myNode.removeChild(myNode.firstChild);
+					};
+			},
+			
+			updateSubItem: function(){
+				this.clearSubItem();
+				
+					
+				this.childText ="";
+					
+					
+				for (var i = 0; i < this.subItems.length; i++) {
+				//	console.log(this.subItems[i].getAttribute("text"));
+					this.appendChild(this.subItems[i]);
+					
+				};
+				
+			
+				
+			},
+			
+			
+			updateStyle : function(){
+				
+			},
+			
+			updateValue : function(){
+			
+		
+				if(this.groupWidget) {
+					this.groupWidget.updateValue();
+				}
+				
+			}
+			
+		});
+   </script>
+</dom-module>
+
+
+
+

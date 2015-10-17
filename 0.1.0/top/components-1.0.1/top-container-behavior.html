@@ -1,0 +1,60 @@
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+<script>
+	TopContainerBehavior = {
+		properties: {
+				items : {
+					type : String,
+					observer : "itemsChanged"
+				},
+				itemField : String, 
+				itemBinding : String,
+				itemLayout : String,
+				itemLayoutChilds : String
+		},
+		
+		initialLayout : function(){
+			this.itemLayout = $(this).html();
+			this.itemLayoutChilds = $($(this).children()[0]).children();
+		},
+		
+		clearLayout : function(){
+			var myNode = this;
+			while (myNode.firstChild) {	
+					 $(myNode.firstChild).remove();
+			};
+		},
+		
+		setModelReference : function(ns_string, key){
+				var parts = ns_string.split('.'),
+					parent = window,
+					i;
+				
+				for(i=0; i<parts.length-1; i+=1){
+					if(typeof parent[parts[i]] ==="undefined"){
+						parent[parts[i]] ={};
+					};		
+					parent = parent[parts[i]];
+					
+					if(parts[i+1] == "data") {
+						this.dataVariable[key] = parent;
+						i= i+1;
+						break;
+					}
+				};
+				
+				this.dataVariable[key] = parent;
+				if(this.dataVariable[key]["bindWidget"])
+					this.dataVariable[key]["bindWidget"].push(["items", this, key]);		
+		},
+		
+		itemsChanged : function(newValue){
+			if(typeof newValue === 'string')
+				this.setModelReference(newValue, "items");	
+		}
+	};
+
+   </script>
+
+
+

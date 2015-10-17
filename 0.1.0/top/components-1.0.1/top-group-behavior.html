@@ -1,0 +1,33 @@
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+<script>
+	TopGroupBehavior = {
+		properties: {
+				items : []
+		},
+		
+		
+		initItems : function(){
+			
+			this.items = $(this).children();
+			for (var i = 0; i < this.items.length; i++) {
+				this.items[i].groupWidget = this;
+			};
+		
+		},
+			
+		clearItems : function(){
+					var myNode = this;
+					while (myNode.firstChild) {
+							  myNode.removeChild(myNode.firstChild);
+					};
+		}
+		
+		
+		
+	};
+
+   </script>
+
+
+

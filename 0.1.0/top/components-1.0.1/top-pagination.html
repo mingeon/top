@@ -1,0 +1,115 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-group-behavior.html">
+
+<script type="text/javascript" src="../../bootstrap/bootstrap.bootpage-1.0.7/bootstrap.bootpage.js"></script>	
+
+<dom-module id="top-pagination">	
+   <template>
+ 		<p class="pagination"></p>
+   </template>
+  		
+   <script>
+TopPagination = Polymer({
+		is : "top-pagination", 
+		behaviors : [TopWidgetBehavior],
+		properties :{
+			total : {
+				type : Number,
+				value : 1,
+				observer : "totalChanged"
+			},
+			page : {
+				type : Number,
+				value : 1,
+				observer : "pageChanged"
+			},
+			maxVisible : Number,
+			targetArea : String,
+			targetContent : String,
+			leaps : {
+				type : Boolean,
+				value : false
+			},
+			firstLastUse : {
+				type : Boolean,
+				value : false,
+			},
+			first : {
+				type : String,
+				value : '←'
+			},
+			last : {
+				type : String,
+				value : '→'
+			},
+			eventPageSelect : {
+				type : String,
+				observer : 'pageSelectChanged'
+			}
+		},
+		
+		totalChagend : function(newValue){
+			this.updateModelbyWidget("total");
+		},
+		
+		pageChanged : function(newValue){
+			this.updateModelbyWidget("page");
+		},
+		
+		ready: function(){
+			this.updateValue();
+		},
+		
+		pageSelectChanged : function(newValue){
+			if(typeof newValue == 'string'){
+				this.eventPageSelect = Top.Util.namespace(newValue);
+			};
+		},
+			
+ 		updateValue : function(){
+				var shadowPage = Polymer.dom(this.root).querySelector('p');
+				if(this.maxVisible == null){
+					this.maxVisible = this.total;
+					
+				};
+				var fSelect =  this.eventPageSelect;
+				var targetArea = this.targetArea;
+				var targetContent = this.targetContent;
+				
+				
+				$(shadowPage).bootpag({
+					total : this.total,
+					page : this.page,
+					maxVisible : this.maxVisible,
+					leaps : this.leaps,
+					firstLastUse : this.firstLastUse,
+					first : this.first,
+					last : this.last
+				}).on('page', function(event, num){
+						if(typeof targetArea == 'string' ){
+							$("#" + targetArea).load(targetContent+" #"+num);
+						};	
+					
+						if (typeof fSelect == 'function') {
+							fSelect(event, num);		
+						};
+				});
+		
+				if(typeof targetArea == 'string' ){
+							$("#" + targetArea).load(targetContent+" #"+this.page);
+				
+				};		
+						
+				if(typeof fSelect  == 'function' )
+						fSelect({}, this.page);
+		}
+	
+});	   	
+
+    </script>
+</dom-module>
+
+
+
+
+

@@ -1,0 +1,146 @@
+<!-- 
+	TmaxSoft One Platform Web Framework Version 1.0.1
+	TOP Style Behavior : Web Component Widget Style Properties Implementation
+-->
+
+
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+<script>
+	TopCommonStyleBehavior = {
+		properties: {
+			// Widget Style Properties
+			disabled : String,
+			opacity: String,
+			backgroundColor: String,
+			backgroundImage: String,
+			tileMode: String,	
+			maxWidth: String,
+			minWidth: String,
+			maxHeight: String,
+			minHeight: String,
+			padding: String,
+			margin: String,
+			visible: String,
+			display : String,
+			
+			// Layout Style Properties
+			layoutHorizontalAlignment : {
+				type : String,
+				reflectToAttribute: true
+			},
+			layoutVerticalAlignment : {
+				type : String,
+				reflectToAttribute: true
+			},
+			layoutHeight: {
+				type : String,
+				reflectToAttribute: true
+			},
+			layoutWidth: {
+				type : String,
+				reflectToAttribute: true
+			},
+			layoutAlignParent:  {
+				type : String,
+				reflectToAttribute: true
+			},
+			layoutRow:  {
+				type : String,
+				reflectToAttribute: true
+			},
+			layoutColumn:  {
+				type : String,
+				reflectToAttribute: true
+			},
+			layoutRowSpan:  {
+				type : String,
+				reflectToAttribute: true
+			},
+			layoutColumnSpan:  {
+				type : String,
+				reflectToAttribute: true
+			},
+			layoutTop:  {
+				type : String,
+				reflectToAttribute: true
+			},
+			layoutLeft:  {
+				type : String,
+				reflectToAttribute: true
+			},
+			layoutTabName: {
+				type : String,
+				reflectToAttribute: true
+			},
+			layoutTabIcon: {
+				type : String,
+				reflectToAttribute: true
+			},
+			layoutWeight : {
+				type : String,
+				reflectToAttribute: true
+			},
+		
+			topstyle: String, // Serialize Propeties
+			
+			// Calculation Properties(only Getting, not set)
+			width: String,
+			height: String,
+			top: String,
+			left: String,
+			bottom: String,
+			right: String,
+		}, 
+			
+		updateStyle : function(keys){
+			var layoutRenderFlag = false;
+			
+			if (keys != null) {
+				for (var i = 0; i < keys.length; i++) {
+					this.updateModelbyWidget(keys[i]);
+		
+					if(!layoutRenderFlag){
+						if(keys[i] === "layoutAlignParent" || keys[i] === "layoutRow" || keys[i] === "layoutColumn" || keys[i] === "layoutRowSpan" || keys[i] === "layoutColumnSpan"||
+						   keys[i] === "layoutTop" || keys[i] === "layoutLeft" || keys[i] === "layoutTabName" || keys[i] === "layoutTabIcon"  || keys[i] === "layoutWeight" || keys[i] === "layoutHorizontalAlignment" || keys[i] === "layoutVerticalAlignment" ){
+						   layoutRenderFlag =true;
+						   break;
+						 };
+					 };
+				};		
+				
+				if (layoutRenderFlag) {
+					this.layoutParent.renderLayout();
+				};
+			};
+			
+			var  bImage="";
+			
+			if (this.backgroundImage != null) {
+				 bImage = "url(" + this.backgroundImage + ")";
+				if (this.tileMode == null) 
+					this.tileMode = "no-repeat";
+			};
+		
+			if (this.textStyle == "bold") {
+				this.textWeight = "bold";
+			}else{
+				this.textWeight = "normal";
+			}
+			
+			if (this.visible == "none") {
+				this.display = "none";
+			}else{
+				this.display = null;
+			}
+		
+			this.topstyle = "max-width: "+ this.maxWidth + "; min-width: "+ this.minWidth + "; min-width: "+ this.minWidth + "; max-height: "+ this.maxHeight + "; min-height: "+ this.minHeight + "; background-color: "+this.backgroundColor + "; background-image: " + bImage + "; background-repeat: " + this.tileMode +"; opacity: " + this.opacity+ "; width: " + this.layoutWidth + "; height: " + this.layoutHeight + "; position: relative;" + "left: "+ this.left + "; top: " + this.top + "; right: " + this.right+"; bottom: " 
+						+ this.bottom+ "; margin: " + this.margin +"; padding: " + this.padding + "; visibility:" + this.visible + "; display:" + this.display + "; " ;		
+			this.topstyle += "color: " + this.textColor +"; font-size: " + this.textSize + "; font-style : " + this.textStyle + "; font-weight : "+this.textWeight; 	
+		}
+	};
+
+   </script>
+
+
+

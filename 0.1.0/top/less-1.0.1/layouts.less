@@ -1,0 +1,79 @@
+// TOP Web Framework 
+// Layout Style Sheets : TOP Linear, Absolute, Frame, Grid and Dock Layout (Base Bootstrap : http://getbootstrap.com) 
+// Base style Sheets Less File version 1.0.1--------------------------------------
+
+// Layout containers
+top-linearlayout::shadow div, top-absolutelayout::shadow div, top-framelayout::shadow div, top-gridlayout ul, top-docklayout > .container {
+  margin-bottom: @line-height-computed;
+  background-color: @panel-bg;
+  border: 1px solid #dddddd;
+  border-radius: @panel-border-radius;
+  .box-shadow(0 1px 1px rgba(0,0,0,.05));
+}
+
+// Linearlayout contents
+top-linearlayout::shadow div > div {
+  padding: @panel-body-padding;
+  &:extend(.clearfix all);
+}
+
+// Gridlayout contents
+top-gridlayout ul li{
+    padding: @panel-body-padding;
+    &:extend(.clearfix all);
+/*	background: #fef9e2;
+	border-top-left-radius: 4px;
+	border: 3px solid #dddddd;
+	border-radius: 10px;*/
+}
+
+// Docklayout contents
+top-docklayout > .container > div {
+  padding: @panel-body-padding;
+  &:extend(.clearfix all);
+}
+
+top-docklayout {
+    
+      div { 
+			border : 1px solid #d3d3e3; 
+		}
+		.north{ 
+			margin:0;  
+			padding:1em;
+			width : 100%;
+		}        
+		.south {
+			 margin:0;  
+			 padding:1em; 
+             position : absolute;
+             bottom : 0;
+             width : 100%;
+		}        
+		.east { 
+			margin:0;  
+			padding:1em;  
+		    height : 100%;
+			float:left; 
+			margin-right:1.1em; 
+		}        
+		.west { 
+			margin:0;  
+			padding:1em;
+			height : 100%;
+			float:right; 
+			margin-left:1.1em;
+		}        
+		.center { 
+			margin:0;  
+			padding:1em;  
+			padding-bottom:0em; 
+		}        
+		.center:after { 
+			content:' '; 
+			clear:both; 
+			display:block; 
+			height:0; 
+			overflow:hidden; 
+		}
+}

@@ -1,0 +1,74 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+
+<dom-module id="top-datepicker">
+    <template>	
+         <input id="{{id}}" name="{{name}}" type="date" value="{{date::change}}" min="{{minDate}}" max="{{maxDate}}" onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" onfocus="{{eventFocused}}" onblur="{{eventLostFocused}}" style$="{{topstyle}}" />
+   </template>
+   		
+   <script>
+TopDatepicker = Polymer({
+		is : "top-datepicker",
+		behaviors : [TopWidgetBehavior],
+		properties : {
+			disabled : {
+				type : String,
+				reflectToAttribute : true,
+				observer : "disabledChanged"
+			},
+			date : {
+				type : Date,
+				observer : "dateChanged"
+			},
+			maxDate : {
+				type : String,
+				reflectToAttribute : true,
+				observer : "maxDateChanged"
+			},
+			minDate :{
+				type : String,
+				reflectToAttribute : true,
+				observer : "minDateChanged"
+			}
+		},
+		
+		ready : function(){
+			this.updateValue();
+		},
+		
+		maxDateChanged : function(newValue){
+			this.updateModelbyWidget("maxDate");
+		},
+		
+		minDateChanged : function(newValue){
+			this.updateModelbyWidget("minDate");
+		},
+	
+		disabledChanged : function(newValue){
+			var shadowInput = Polymer.dom(this.root).querySelector('input');	
+			if(this.disabled =="true" || this.disabled ==true ){
+					$(shadowInput).attr("disabled", "true");		
+			}else{
+					$(shadowInput).removeAttr("disabled");
+			};
+			
+			this.updateModelbyWidget("disabled");
+		},
+		
+		dateChanged : function(newValue){
+			this.value = newValue;
+			
+			this.updateModelbyWidget("date");
+			
+			if (typeof this.eventChanged === 'function') {
+				this.eventChanged(newValue);
+			};
+			
+		}
+
+});   	
+	
+
+    </script>
+</dom-module>
+
+

@@ -1,0 +1,64 @@
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+<script>
+	
+	
+	TopCheckBehavior = {
+		properties : {
+			checked : {
+			    type: String,
+				value : false,
+   				observer: 'checkedChanged'
+			},
+			groupId: String,
+			flag : {
+				type: Boolean,
+				value : false
+			}
+		},
+	
+		checkedChanged : function(newValue){
+			if(newValue === "true" || newValue === true){
+				this.checked = true;						
+			} else if(newValue === "false" || newValue === false){
+				this.checked = false;		
+			} else {
+				this.checked = Top.Util.namespace(newValue)();
+			}
+					
+			
+			if(this.localName == "top-switch" ){
+				if (newValue === true) {
+					this.toggleOn();
+				}
+				else {
+					this.toggleOff();
+				}		
+			};
+			
+			if(this.localName == "top-toggle" ){
+				if (newValue === true) {
+					this.toggleOn();
+				}
+				else {
+					this.toggleOff();
+				}		
+			};
+		
+		
+		
+			this.value = newValue;	
+				
+			this.updateModelbyWidget("checked");
+			
+			if (typeof this.eventChanged === 'function') {
+				var widget = Top.Dom.selectById(this.id);
+				this.eventChanged(widget);
+			};
+		}
+	};
+
+   </script>
+
+
+

@@ -1,0 +1,76 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-group-behavior.html">
+
+<dom-module id="top-selectbox">	
+   <template>
+		<select on-change="changeSelected" style$="{{topstyle}}" onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" onfocus="{{eventFocused}}" onblur="{{eventLostFocused}}">
+			<content></content>
+		</select>	
+   </template>
+  		
+   <script>
+TopSelectbox = Polymer({
+		is : "top-selectbox", 
+		behaviors : [TopWidgetBehavior, TopGroupBehavior],
+		properties : {
+			disabled : {
+				type : String,
+				reflectToAttribute : true,
+				observer : "disabledChanged"
+			}
+		},
+		
+		disabledChanged : function(newValue){
+			if(this.disabled =="true" || this.disabled ==true ){
+					$(selectRoot).attr("disabled", "true");
+			}else{
+					$(selectRoot).removeAttr("disabled");
+			};
+			
+			this.updateModelbyWidget("disabled");
+		},
+		
+		ready: function(){
+			this.initItems();
+			this.updateValue();
+		},
+		
+		changeSelected : function(){
+			var selectRoot =  Polymer.dom(this.root).querySelector('select'); 	
+	        var selectValue = selectRoot.options[selectRoot.selectedIndex].value;
+			this.value = selectValue;		
+			this.updateModelbyWidget("value");
+			if (typeof this.eventChanged === 'function') {
+				this.eventChanged(this.value);
+			};
+		},
+			
+ 		updateValue : function(){
+				this.clearItems();
+				var optText ="";
+				var selectRoot =  Polymer.dom(this.root).querySelector('select'); 	
+				$(selectRoot).empty();	
+				for (var i = 0; i < this.items.length; i++) {
+					if (this.items[i].getAttribute('text') != null) {
+						optText = this.items[i].getAttribute('text');
+					}else {
+						optText = this.items[i].text;
+					};	
+					$(selectRoot).append("<option value="+optText+">"+optText+"</option>");
+				};
+				
+				if(this.disabled =="true" || this.disabled ==true ){
+						$(selectRoot).attr("disabled", "true");
+				}else{
+						$(selectRoot).removeAttr("disabled");
+				};
+		}
+});	   	
+
+    </script>
+</dom-module>
+
+
+
+
+

@@ -1,0 +1,109 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-check-behavior.html">
+<script type="text/javascript" src="../../bootstrap/bootstrap.toggle-2.2.0/bootstrap.toggle.js"></script>	
+
+<dom-module id="top-toggle">	
+   <template>
+   	     	<input id="{{id}}" type="checkbox" checked="{{checked::change}}" data-toggle="toggle" data-on="{{textOn}}" data-off="{{textOff}}" onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" onfocus="{{eventFocused}}" onblur="{{eventLostFocused}}" >
+  </template>
+  
+   <script>
+TopToggle = Polymer({
+			is : "top-toggle",
+			behaviors : [TopWidgetBehavior, TopCheckBehavior],
+			properties : {
+				textOn : { 
+					type : String,
+					value : "On",
+					observer : "textonChanged"
+				},
+				textOff : {
+					type : String,
+					value : "Off",
+					observer : "textoffChanged"
+				},
+				disabled : {
+					type : String,
+					reflectToAttribute : true,
+					observer : "disabledChanged"
+				}
+			},
+			
+			textonChanged : function(newValue){
+				this.updateModelbyWidget("textOn");
+			},
+			
+			textoffChanged : function(newValue){
+				this.updateModelbyWidget("textOff");
+			},
+			
+			disabledChanged : function(newValue){
+				this.updateModelbyWidget("disabled");
+			},
+			
+			ready : function(){		
+				this.updateValue();
+
+			},
+			updateValue : function(){
+				var shadowInput = Polymer.dom(this.root).querySelector('input');
+				$(shadowInput).bootstrapToggle('destroy');
+					
+				if(this.disabled =="true" || this.disabled==true){
+					$(shadowInput).bootstrapToggle({
+						on: this.textOn,
+						off: this.textOff,
+						width : this.layoutWidth,
+						height : this.layoutHeight,
+						topstyle  : this.topstyle,
+						style : "disabled"		
+					});
+				}else{
+					$(shadowInput).bootstrapToggle({
+						on: this.textOn,
+						off: this.textOff,
+						width : this.layoutWidth,
+						height : this.layoutHeight,
+						topstyle  :this.topstyle		
+					});
+					
+				};
+				
+				if(this.checked == true){
+					this.toggleOn();
+				}else{
+					this.toggleOff();
+				};
+				
+				var obj = this; // Toggle OBject Copy
+					
+				$(shadowInput).change(function() {
+    					 obj.checked = $(shadowInput).prop('checked');
+   				});
+				 					
+				$(document).on('click.bs.toggle', "top-toggle#"+this.id, function(e) {
+					$(shadowInput).bootstrapToggle('toggle')
+					e.preventDefault()
+				});
+			},
+			
+			toggleOn : function(){
+				var shadowInput = Polymer.dom(this.root).querySelector('input');
+				$(shadowInput).bootstrapToggle('on');
+
+			},
+			
+			toggleOff : function(){
+				var shadowInput = Polymer.dom(this.root).querySelector('input');
+				$(shadowInput).bootstrapToggle('off');
+			}		
+	});
+   </script>
+
+
+
+</dom-module>
+
+
+
+

@@ -1,0 +1,118 @@
+<link rel="import" href="../components-1.0.1/top-menu-behavior.html">
+
+<dom-module id="top-contextmenu">	
+	
+
+   <template>
+			
+			<div class="context">
+						<content></content>
+			</div>
+   </template>
+  		
+   <script>
+TopContextmenu = Polymer({
+		is : "top-contextmenu", 
+		behaviors : [TopMenuBehavior],
+		properties : {
+			menuArray : []
+			
+		},
+		ready: function(){
+			
+			this.initialMenuItems();
+			this.renderMenu();	
+		},
+		makeMenuArray : function(item){
+			var nodeObject ={};
+			var childNodeArray = [];
+		
+			if (item.getAttribute("name") != null) {
+				nodeObject["text"] = item.getAttribute("name");
+			}else if(item.name != null){
+				nodeObject["text"] = item.name;
+			};
+				
+			if (item.getAttribute("divider") == "true" || item.getAttribute("divider") == true ) {
+				nodeObject["divider"] = item.getAttribute("name");
+			}else if(item.divider =="true" ||item.divider ==true){
+				nodeObject["divider"] = item.divider;
+			};
+				
+					
+			var subItems =$("#"+item.id).children();
+	
+			if (subItems.length != 0) {
+					for (var i = 0; i < subItems.length; i++) {
+					
+						if ($("#" + subItems[i].id).children().length != 0) {
+							childNodeArray[i] = this.makeMenuArray(subItems[i]);
+							
+						}
+						else {
+							childNodeArray[i] = this.makeMenuArray(subItems[i]);
+						};
+					};
+			}else if(item.subMenuItems  != undefined){
+				subItems = item.subMenuItems;
+				
+				for (var i = 0; i < subItems.length; i++) {
+					
+						if (subItems[i].subMenuItems.length != 0) {
+							childNodeArray[i] = this.makeMenuArray(subItems[i]);
+							
+						}
+						else {
+							childNodeArray[i] = this.makeMenuArray(subItems[i]);
+						};
+				};
+				
+			};
+			
+			
+			
+			if (childNodeArray.length != 0) {
+				nodeObject["subMenu"] = childNodeArray;
+			//	console.log(nodeObject["subMenu"]);
+				return nodeObject;	
+			}else {
+				return nodeObject;
+				 
+			};
+			
+			
+		},
+			
+ 		renderMenu : function(){
+				this.clearMenuItems();
+				this.menuArray = [];
+		
+				for (var i = 0; i < this.menuItems.length; i++) {
+						this.appendChild(this.menuItems[i]);
+						
+				};	
+				if(this.menuItems != null) {
+					 	for (var i = 0; i < this.menuItems.length; i++) {
+					 		this.menuArray[i] = this.makeMenuArray(this.menuItems[i]);
+						}
+						
+				};
+				
+			//	console.log(this.menuArray);
+				
+				
+				
+				
+		}	
+			
+		
+	
+});	   	
+
+    </script>
+</dom-module>
+
+
+
+
+

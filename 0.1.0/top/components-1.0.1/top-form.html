@@ -1,0 +1,80 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-layout-behavior.html">
+
+<dom-module id="top-form">	
+   <template>  
+   		<form id="{{id}}" method="post"   name="{{name}}" > 
+			<fieldset>
+				<legend>{{name}}</legend>
+				<content></content>
+  			
+				<input type="button" value="submit" on-click= "_submit">
+			</fieldset>
+			
+			
+		</form>
+	</template>
+	<script>
+	TopForm = Polymer({
+				is : 'top-form',
+				behaviors : [TopWidgetBehavior, TopLayoutBehavior],
+				properties : {
+					url : String,
+					eventSubmit : String
+				},
+				ready: function(){	
+			
+					
+					this.initialChilds();				
+					this.renderLayout();
+					this.updateStyle();
+				},
+				
+				_submit : function(){
+					
+					
+					var  submitData= {};
+					
+					var formRoot = Polymer.dom(this.root).querySelector('form'); 
+					
+					
+					for (var i = 0; i < this.childs.length; i++) {
+					
+						if (this.childs[i]["localName"] === "top-radiobutton") {
+							if (this.childs[i]["value"] === true) {
+								submitData[this.childs[i]["name"]] = this.childs[i]["text"];
+							};
+						}else if(this.childs[i]["localName"] === "top-edittext" || this.childs[i]["localName"] === "top-datepicker" || this.childs[i]["localName"] === "top-checkbox" ||this.childs[i]["localName"] === "top-slider" ) {
+						
+							submitData[this.childs[i]["name"]] = this.childs[i]["value"];
+						};
+					
+					
+					};
+					
+					
+					Top.Ajax.post(this.url,
+					    submitData, "",
+					    function(data, textStatus, jqXHR)
+					    {
+					       
+					  }, "");
+					
+					//request with URL,data,success callback
+					/*
+					$.post(this.url,
+					    submitData,
+					    function(data, textStatus, jqXHR)
+					    {
+					          console.log(data);
+					  });
+					  */
+	
+				},
+				
+				renderLayout : function(){
+						
+				}
+			}); 
+   </script>
+</dom-module>

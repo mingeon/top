@@ -1,0 +1,89 @@
+
+<dom-module id="top-template">
+   <template>
+	
+		
+			<content></content>
+		
+   </template>
+   		
+   <script>
+	TopTemplate= Polymer({
+		is : "top-template",
+		properties : {
+	
+			parent : {
+				type : String,
+				value : null
+			},
+			data : {
+				type : String,
+				observer : "dataChanged"
+			},
+			html : {
+				type : String,
+				value : null
+			}
+		},
+		
+		dataChanged : function(newValue){	
+			if(typeof this.data  == 'string' )
+				this.data = Top.Util.namespace(this.data);
+		},
+		                          
+		ready : function() {
+		
+			this.updateValue();
+			
+		},
+		
+		convert : function(str){
+		  str = str.replace(/&amp;/gi, "&");
+		  str = str.replace(/&gt;/gi, ">");
+		  str = str.replace(/&lt;/gi, "<");
+		  str = str.replace(/&quot;/gi, '"');
+		  str = str.replace(/&#039;/gi, "'");
+		  return str;
+		},
+		
+
+		updateValue : function(){
+			if(this.parent == null){
+				this.parent = $(this).parent().attr('id');
+			}
+			
+			
+			this.setHtml(this.convert($(this).html()));
+
+			
+			if(this.html != null && this.data != null && this.parent != null){		
+				this.getRender("#" + this.parent);
+				
+				$(this).remove();
+				
+			}
+			
+		
+		},
+		
+		setData : function(data){
+			this.data = data;
+		},
+		
+		setHtml : function(html){
+			this.html = html;
+		},
+
+		getRender : function(parent){
+			var parse_result = $.templates(this.html).render(this.data);
+		
+			$(parent).append(parse_result);
+			
+		}
+	
+	
+				
+		
+	});
+   </script>
+</dom-module>

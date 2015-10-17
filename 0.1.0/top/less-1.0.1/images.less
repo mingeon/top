@@ -1,0 +1,26 @@
+// TOP Web Framework 
+// Imageview Style Sheets  (Base Bootstrap : http://getbootstrap.com) 
+// Base style Sheets Less File version 1.0.1--------------------------------------
+top-imageview::shadow img{
+  vertical-align: middle;
+}
+
+top-imageview.rounded::shadow img{
+  border-radius: @border-radius-large;
+}
+
+top-imageview.circle::shadow img{
+  border-radius: 50%; // set radius in percents
+}
+
+top-imageview.thumbnail::shadow img {
+  padding: @thumbnail-padding;
+  line-height: @line-height-base;
+  background-color: @thumbnail-bg;
+  border: 1px solid @thumbnail-border;
+  border-radius: @thumbnail-border-radius;
+  .transition(all .2s ease-in-out);
+
+  // Keep them at most 100% wide
+  .img-responsive(inline-block);
+}

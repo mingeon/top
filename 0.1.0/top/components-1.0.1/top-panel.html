@@ -1,0 +1,107 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-container-behavior.html">
+
+<script src="../../jquery/jquery.jspanel-2.5.3/jquery.ui.js" type="text/javascript"></script>
+<script src="../../jquery/jquery.jspanel-2.5.3/jquery.jspanel.js" type="text/javascript"></script>
+
+<dom-module id="top-panel">
+   <template>	
+		<content></content>
+   </template>
+   <script>
+TopPanel = Polymer({
+			is : "top-panel",
+			behaviors : [TopWidgetBehavior, TopContainerBehavior],
+			properties: {
+				title : {// Toolbar Icons Property Array varaible Name 
+					type:String,
+					observer : "titleChanged" 
+				},
+				closeIcon : {
+					type : String,
+					value : false
+				},
+				content : String,
+				icons : {// Toolbar Icons Property Array varaible Name 
+					type:String,
+					observer : "iconChanged" 
+				},
+				panel :Object
+					
+			},
+			titleChanged : function(newValue){
+				
+				if(this.panel != null)
+					this.panel.title(newValue);
+				
+				this.updateModelbyWidget("title");						
+			},
+			
+			ready: function() {
+				this.initialLayout();	
+				this.renderLayout();	
+	     	},
+			
+			iconChanged : function(newValue){
+				if(typeof newValue == 'string'){
+					this.icons = Top.Util.namespace(newValue);	
+				}else if(this.panel != null){
+					this.panel.addToolbar(newValue);
+					
+				};
+				
+				this.updateModelbyWidget("icons");
+				
+			},
+			
+			updateValue : function(){
+				this.renderLayout();
+			},
+			
+			renderLayout: function(){		
+				this.clearLayout();
+				if (this.panel != null) {
+					console.log("close");				
+					this.panel.close();	
+				};
+					 
+				 
+				var layout  =this.itemLayout;
+				var root_panel = Polymer.dom(this.root).querySelector('.panel'); 
+				
+				$(this).append("<div class='test' style='"+this.topstyle+"'></div>");
+				
+				this.panel= $.jsPanel({
+							    selector: "#"+this.id+ " .test",
+							    position: "center",
+							    theme:    "success",
+							    title:    this.title,
+								draggable: "disabled",
+								content : layout,
+								controls: {
+								    iconfont:'jsglyph',
+								    close: false,
+									maximize : true,
+									minimize: true
+								},
+								 toolbarHeader :this.icons
+							});
+			},
+				
+			setContent : function(html){
+				this.panel.reloadContent(html);
+			},
+			
+			setTitle : function(title){
+				this.panel.title(title);
+			},
+			
+			setIcons : function(toolbar){
+				this.panel.addToolbar("header", toolbar);
+			}
+		});
+   </script>
+
+</dom-module>
+
+

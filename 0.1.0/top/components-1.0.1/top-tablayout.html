@@ -1,0 +1,102 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-layout-behavior.html">
+
+
+<script src="../../jquery/jquery.ui-1.11.4/jquery.ui.tab.js"></script>
+ 
+ 
+<dom-module id="top-tablayout">	
+   <template>	  
+		<div id="{{id}}" name="{{name}}" style$="{{topstyle}}">
+			<content>
+			</content>
+		</div>
+  </template>
+  
+   <script>
+	TopTablayout = Polymer({
+			is : "top-tablayout",
+			behaviors : [TopWidgetBehavior, TopLayoutBehavior],
+
+			factoryImpl: function(id) {
+			    	this.id = id;
+			},	
+				
+			ready: function(){
+				
+				this.initialChilds();
+				this.renderLayout();
+			//	this.updateStyle();
+				
+			},
+			
+			renderLayout : function(){
+					
+	
+					this.clearChilds();
+					
+					for(var i=0; i<this.childs.length; i++){
+						//$(this).append(this.childs[i]);
+						//$(this).append(this.childs[i]);
+						this.appendChild(this.childs[i]);
+					};
+					
+					var layout_children =$(this).children();	
+					
+					var tabNameHeaderTag="<ul>"; 
+					for(var i=0; i<layout_children.length; i++){
+						
+						var layoutTabName ="";
+						var layoutTabIcon ="";
+						
+						if (layout_children[i].getAttribute('layout-tab-name') != null) {
+							layoutTabName = layout_children[i].getAttribute('layout-tab-name');
+							//layoutTabName = this.childs[i].getAttribute('layout-tab-name');
+						}else {
+							layoutTabName = layout_children[i].layoutTabName;
+							
+						};
+						
+						
+						if (layout_children[i].getAttribute('layout-tab-icon') != null) {
+							layoutTabIcon = layout_children[i].getAttribute('layout-tab-icon');
+							//layoutTabName = this.childs[i].getAttribute('layout-tab-name');
+						}else {
+							layoutTabIcon = layout_children[i].layoutTabIcon;
+							
+						};
+						
+							
+						$(layout_children[i]).wrap("<div id='"+layoutTabName+"'></div>");
+						tabNameHeaderTag += "<li><a href='#"+layoutTabName+"'><span class='glyphicon "+layoutTabIcon+"' aria-hidden='true'></span>"+layoutTabName+"</a></li>";
+						
+						if(i == (layout_children.length-1)){
+							tabNameHeaderTag += "</ul>";
+							
+							$(this).prepend(tabNameHeaderTag);
+							$(this).children().wrapAll("<div class='tabs'></div>");
+							
+						//	console.log(this);
+							
+							$(this.querySelector(".tabs")).tabs();
+							
+							
+						};
+				
+					};
+					
+				
+					
+							
+			}
+				
+				
+		});
+   </script>
+
+
+
+</dom-module>
+
+
+

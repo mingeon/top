@@ -1,0 +1,97 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-layout-behavior.html">
+
+
+<script src="../../jquery/jquery.ui-1.11.4/jquery.ui.resizable.js" type="text/javascript"></script>
+
+<dom-module id="top-linearlayout">
+
+   <template>	
+	
+	<div id="{{id}}"  name="{{name}}" style$="{{topstyle}}">  
+		   <content></content>
+	</div>	
+   </template>
+   
+   <style>
+ 
+   </style>
+   		
+   <script>
+TopLinearlayout = Polymer({
+			is : "top-linearlayout",
+			behaviors : [TopWidgetBehavior, TopLayoutBehavior],
+			
+			properties: {
+				orientation :{
+					type : String,
+					value :"horizontal"
+				},
+				resizable : {
+					type : Boolean,
+					value : false
+				}
+			},
+			
+			ready: function() {
+				this.initialChilds();
+				this.renderLayout();	
+			
+	     	},
+			
+			updateValue : function(){
+				this.renderLayout();
+				
+			},
+	
+	
+			renderLayout: function(){
+				var horizontalAlign, verticalAlign, weight;
+				
+				this.clearChilds();
+				
+				
+				
+				var layout_children =this.childs;
+						
+				if (this.orientation == "vertical") {
+					for (var i = 0; i < layout_children.length; i++) {
+						horizontalAlign="left";
+						weight= null;
+						
+						horizontalAlign = layout_children[i].getAttribute("layout-horizontal-alignment");
+						weight = layout_children[i].getAttribute("layout-weight");
+						$(layout_children[i]).wrap("<div style='display:block; text-align:"+horizontalAlign+"; height:"+weight+";'></div>");
+					
+						this.appendChild(layout_children[i].parentElement);
+						
+						if(this.resizable == true)
+							$(layout_children[i].parentElement).resizable();
+						
+					};
+				}else {
+					for (var i = 0; i < layout_children.length; i++) {
+						verticalAlign ="top";
+						weight=null;
+						verticalAlign = layout_children[i].getAttribute("layout-vertical-alignment");
+						weight = layout_children[i].getAttribute("layout-weight");
+						var horizontalAlign = layout_children[i].getAttribute("layout-horizontal-alignment");
+						if(horizontalAlign == 'right') {
+							$(layout_children[i]).wrap("<div style='float:" + horizontalAlign + ";'></div>");
+						} else {
+							$(layout_children[i]).wrap("<div style='float:left;'></div>");
+						}
+						this.appendChild(layout_children[i].parentElement);	
+						
+						if(this.resizable == true)
+							$(layout_children[i].parentElement).resizable();
+						
+					}
+				}
+			}
+		});
+   </script>
+
+</dom-module>
+
+

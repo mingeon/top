@@ -1,0 +1,233 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+
+
+
+<script src="../../jquery/jquery.highcharts-4.1.8/jquery.highcharts.js" type="text/javascript"></script>
+<script src="../../jquery/jquery.highcharts-4.1.8/jquery.highcharts-more.js" type="text/javascript"></script>
+
+<dom-module id="top-chart">
+   <template>
+	<content></content>
+   </template>
+   		
+   <script>
+	TopChart= Polymer({
+		is : "top-chart",
+		behaviors : [TopWidgetBehavior],
+		properties : {
+			type : {
+				type : String,
+				value : "line",
+				observer : "typeChanged",
+			},
+			title : {
+				type : String,
+				observer : "titleChanged"
+			},
+			series : {
+				type: String,
+				observer : "seriesChanged"
+			},
+			data : {
+				type: String,
+				observer : "dataChanged"
+			},
+			option: {
+				type: String,
+				observer : "optionChanged",
+				value : null
+			},
+			width : { // Number without Pixel  
+				type : String,
+				observer : "widthChanged",
+				value : null
+			},
+			height : {// Number without Pixel
+				type : String,
+				observer : "heightChanged",
+				value : null
+			},
+			chart : {
+				type : Object,
+				value : null
+			}
+		},
+		
+		widthChanged : function() {
+		},
+		
+		heightChanged : function() {
+		},
+		
+		typeChanged : function(){
+			this.updateModelbyWidget("type");
+		},
+		
+		titleChanged : function(){
+			this.updateModelbyWidget("title");
+		},
+		
+		optionChanged : function(newValue){
+			if (typeof newValue == 'string') {
+				this.option = Top.Util.namespace(newValue);
+			}else{
+				this.updateModelbyWidget("option");
+			};
+		},
+		
+		seriesChanged : function(newValue){
+			if (typeof newValue == 'string') {
+				this.series = Top.Util.namespace(newValue);
+			}else{
+				this.updateModelbyWidget("series");
+			};
+		},
+		
+		dataChanged : function(newValue) {
+			if(typeof newValue == 'string') {
+				this.setModelReference(newValue, "data");
+			}
+		},
+		
+		setModelReference : function(ns_string, key){
+				var parts = ns_string.split('.'),
+					parent = window,
+					i;
+				
+				for(i=0; i<parts.length-1; i+=1){
+					if(typeof parent[parts[i]] ==="undefined"){
+						parent[parts[i]] ={};
+					};		
+					parent = parent[parts[i]];
+					
+					if(parts[i+1] == "data") {
+						this.dataVariable[key] = parent;
+						i= i+1;
+						break;
+					}
+				};
+				
+				this.dataVariable[key] = parent;
+				if(this.dataVariable[key]["bindWidget"])
+					this.dataVariable[key]["bindWidget"].push(["data", this, key]);		
+		},
+		
+		ready : function() {
+			$(this).append("<div class='chart' style='width:"+this.layoutWidth+"; height :"+this.layoutHeight+"; border : 1px red; '></div>");
+			this.updateValue();
+		},
+		
+		updateValue : function(){
+			 if (this.option != null) {
+				if(this.data) {
+					if(typeof this.data == 'string') {
+						var obj = Top.Util.namespace(this.data);
+					} else {
+						return;
+					}
+					if(!this.series) {
+						this.series = [];
+					}
+					var len = obj.length;
+					for(var i = 0; i < len; i++) {
+						if(!this.series[i]) {
+							this.series[i] = {};
+							this.series[i].showInLegend = false;
+						}
+						this.series[i].data = obj[i];
+					}
+				} else if(!this.series) {
+					return;
+				}
+				
+			 	var default_option = {
+				 		chart: {
+				 			type: this.type,
+				 			width: this.width,
+				 			height: this.height
+				 		},
+				 		title: {
+				 			text: this.title
+				 		},
+				 		series: this.series
+			 	};
+				
+				for(var key in this.option){
+					default_option[key] = this.option[key];		
+				};
+			
+				this.chart = $(this.querySelector("#" + this.id + " .chart")).highcharts(default_option);
+			 }else{
+				if(this.data) {
+					if(typeof this.data == 'string') {
+						var obj = Top.Util.namespace(this.data);
+					} else {
+						return;
+					}
+					if(!this.series) {
+						this.series = [];
+					}
+					var len = obj.length;
+					for(var i = 0; i < len; i++) {
+						if(!this.series[i]) {
+							this.series[i] = {};
+							this.series[i].showInLegend = false;
+						}
+						this.series[i].data = obj[i];
+					}
+				} else if(!this.series) {
+					return;
+				}
+			 	this.chart = $(this.querySelector("#" + this.id + " .chart")).highcharts({
+			 		chart: {
+			 			type: this.type,
+			 			width: this.width,
+			 			height: this.height
+			 		},
+			 		title: {
+			 			text: this.title
+			 		},
+			 		series: this.series			 	
+			 	});
+			 }
+		},
+		
+		setTitle : function(title_arg){
+			this.title=title_arg
+			if(this.chart != null)
+				this.chart.setTitle({text :title_arg});
+		},
+		
+		setSize : function(width ,height){
+			this.width = width;
+			this.height =height;
+			
+			if(this.chart != null)
+				this.chart.setSize(width, height);
+		},
+		
+		setType : function(type_arg){
+			this.type = type_arg;			
+			if(this.chart != null)
+				this.updateValue();
+		},
+		
+		setSeries :function(data){
+			if(this.chart != null)
+				this.chart.addSeries(data);
+			this.series = this.chart.series;
+		},
+		
+		setOption: function(option){
+			if (this.chart != null) {
+				var prior_option = this.chart.options;
+				for(var i in option){
+					prior_option[i] = option[i];			
+				};
+				this.chart = $(this.querySelector("#"+this.id + " .chart")).highcharts(prior_option);
+			};		
+		}
+		
+	});
+   </script>
+</dom-module>

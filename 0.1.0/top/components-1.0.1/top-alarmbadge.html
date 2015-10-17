@@ -1,0 +1,61 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-resource-behavior.html">
+<link rel="import" href="../components-1.0.1/top-text-behavior.html">
+
+
+
+<dom-module id="top-alarmbadge">
+	
+   <template>
+   	<div id="{{size}}">
+		<img id="{{id}}" src="{{src}}"   onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" onfocus="{{eventFocused}}" onblur="{{eventLostFocused}}" alt="{{description}}" style$="{{topstyle}}">
+		</img>
+		<span id="{{position}}" class="badge">{{text}}</span>
+   	</div>
+	
+   </template>
+	
+   <script>
+TopAlarmbadge = Polymer({
+			is : "top-alarmbadge",
+			behaviors : [TopWidgetBehavior, TopResourceBehavior, TopTextBehavior],
+			properties: {
+				position : {
+					type : String,
+					value : "tr",
+					observer : "positionChanged"
+				},
+				size : {
+					type: String,
+					value : "lg",
+					observer : "sizeChanged"
+				}
+			},
+
+			positionChanged : function(newValue){
+				if(newValue  == "tr" || newValue  == "tl" ||  newValue  == "bl" || newValue  == "br"){
+				}else{
+					this.position = "tr"; //  Setting Default value
+				};
+				this.updateModelbyWidget("position");
+			},
+			
+			sizeChanged : function(newValue){
+				if(newValue  == "lg" || newValue  == "mg" ||  newValue  == "sg" ){
+				}else{
+					this.position = "mg"; //  Setting Default value
+				};
+				this.updateModelbyWidget("size");			
+			},
+			
+			ready: function() {
+	     	},
+			
+			updateValue : function(){
+			}
+		});
+   </script>
+
+</dom-module>
+
+

@@ -1,0 +1,38 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-range-behavior.html">
+
+<script src="../../jquery/jquery.ui-1.11.4/jquery.ui.progress.js" type="text/javascript"></script>
+	
+<dom-module id="top-progressbar">	
+   <template>
+		<progress id="{{id}}" value="{{progress}}" style$="{{topstyle}}" onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" onfocus="{{eventFocused}}" onblur="{{eventLostFocused}}" ></progress> 
+   </template>
+   <script>
+TopProgressbar = Polymer({
+		is : "top-progressbar", 
+		behaviors : [TopWidgetBehavior, TopRangeBehavior],
+		ready: function(){
+			this.updateValue();
+		},
+			
+		updateValue: function(){
+			/* Exception Cross Browser 추후 코드처리
+			var shadowRoot = Polymer.dom(this.root).querySelector('progress'); 
+			if (BrowserDetect.browser == "Chrome" && parseInt(BrowserDetect.version) <= 300) {
+				 	$(shadowRoot).progressbar({
+						value: (this.progress *100)
+					});
+					$(shadowRoot.querySelector('progress')).remove();
+						  
+			};*/
+		}
+});	
+    </script>
+</polymer-element>
+
+
+
+
+
+
+

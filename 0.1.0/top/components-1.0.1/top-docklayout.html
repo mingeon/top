@@ -1,0 +1,74 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-layout-behavior.html">
+
+<dom-module id="top-docklayout">	
+	
+   <template>
+   	
+	<div id="{{id}}" name="{{name}}" style$="{{topstyle}}">
+		<content>
+		</content>
+	</div>
+  </template>
+  		
+   <script>
+TopDocklayout = Polymer({
+			is : "top-docklayout",
+			behaviors : [TopWidgetBehavior, TopLayoutBehavior],			
+			ready: function(){
+				
+				this.initialChilds();		
+				this.renderLayout();
+				this.updateStyle();
+				
+			},
+		
+			renderLayout:function(){
+					this.clearChilds();
+					
+					for(var i=0; i<this.childs.length; i++)
+						this.appendChild(this.childs[i]);
+					
+					//console.log(this.childs);
+					
+					var layout_children =this.childs;
+					
+					for(var i=0; i<layout_children.length; i++){
+						var layoutAlignParent ="";
+						
+						if(layout_children[i].getAttribute("layout-align-parent") != null){
+							layoutAlignParent = layout_children[i].getAttribute("layout-align-parent");
+						}else{
+							layoutAlignParent = layout_children[i].layoutAlignParent;
+						};
+							
+						switch(layoutAlignParent){
+							case "top": 
+								$(layout_children[i]).wrap("<div class='north'></div>");
+								break;
+							case "bottom": 
+								$(layout_children[i]).wrap("<div class='south'></div>");
+								break;
+							case "left": 
+								$(layout_children[i]).wrap("<div class='east'></div>");
+								break;	
+							case "right": 
+								$(layout_children[i]).wrap("<div class='west'></div>");
+								break;
+							case "center": 
+								$(layout_children[i]).wrap("<div class='center'></div>");
+								break;
+								
+						};	
+						
+					};		
+			}
+				
+		});
+   </script>
+
+</dom-module>
+
+
+
+

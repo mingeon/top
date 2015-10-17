@@ -1,0 +1,131 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-group-behavior.html">
+
+<script src="../../jquery/jquery.bxslider-4.2.5/jquery.bxslider.js" type="text/javascript"></script>
+
+<dom-module id="top-imageslider">	
+   <template>
+			<content></content>
+   </template>
+  		
+   <script>
+TopImageslider = Polymer({
+		is : "top-imageslider", 
+		behaviors : [TopWidgetBehavior, TopGroupBehavior],
+		properties : {
+			mode : {
+				type : String,
+				value : "horizontal",
+				observer : "modeChanged"
+			},
+			autoSlide : {
+				type : String,
+				value : "false",
+				observer : "autoSlideChanged"
+			},
+			speed :{
+				type : Number,
+				value : 500	
+			},
+			startSlide : {
+				type : Number,
+				value : 0
+			},
+			slide : Object,
+			randomStart : {
+				type : Boolean,
+				value : false
+			}
+		},
+		
+		modeChanged : function(newValue){
+			if(newValue == "horizontal" || newValue == "vertical" || newValue == "fade"  ){
+				
+			}else{
+				this.mode = "horizontal";
+			};
+			this.updateModelbyWidget("mode");
+		},
+		
+		autoSlideChanged : function(newValue){
+			if(typeof newValue === "string"){
+				if(newValue =="true"){
+					this.autoSlide = true;
+				}else{
+					this.autoSlide = false;
+				}
+			};
+			this.updateModelbyWidget("autoSlide");
+		},
+		
+		ready: function(){
+			this.initItems();	
+			this.updateValue();
+		},
+			
+ 		updateValue : function(){
+				this.clearItems();
+				
+				var imgSrc ="";
+				var imgCaption ="";
+		
+				for (var i = 0; i < this.items.length; i++) {
+					if (this.items[i].getAttribute('src') != null) {
+						imgSrc = this.items[i].getAttribute('src');
+						imgCaption = this.items[i].getAttribute('caption');
+					}else {
+						imgSrc = this.items[i].src;
+						imgCaption = this.items[i].caption;
+						
+					};	
+					$(this).append("<li><img src='"+imgSrc+"' title='"+imgCaption+"'/></li>");
+				};
+				
+				var style= "'"+"max-width : "+this.maxWidth+"; min-width: "+ this.minWidth + "; max-height: "+ this.maxHeight + "; min-height: "+ this.minHeight +"; background-color: "+this.backgroundColor + "; background-image: " + this.backgroundImage + "; background-repeat: " + this.tileMode +"; opacity: " + this.opacity+ "; width: " + this.layoutWidth + "; height: " + this.layoutHeight + "; position: relative;" + "left: "+ this.left + "; top: " + this.top + "; right: " + this.right+"; bottom: " 
+						+ this.bottom+ "; margin: " + this.margin +"; padding: " + this.padding + "; visibility:" + this.visible + ";"+"'";
+				
+				if (this.items.length != 0) {
+					$(this.querySelectorAll("#" + this.id + "> li")).wrapAll("<div style="+ style+"><ul class=bxslider></ul></div>");
+					this.slide = $(this.querySelector("#" + this.id +' .bxslider')).bxSlider({
+										mode: this.mode,
+									    auto: this.autoSlide,
+									    speed: this.speed,
+										startSlide : this.startSlide,
+										randomStart : this.randomStart
+									});
+				};
+		},
+		
+		goToSlide : function(index){
+			this.slide.goToSlide(index);
+			
+		},
+		
+		goToNextSlide : function(){
+			this.slide.goToNextSlide();
+		},
+		
+		goToPrevSlide : function(){
+			this.slide.goToPrevSlide();
+		},
+		
+		startAuto : function(){
+			this.slide.startAuto(index);
+		},
+		
+		stopAuto : function(){
+			this.slide.stopAuto(index);
+		},
+		
+		getCurrentSlide : function(){
+			 return this.slider.getCurrentSlide();
+		}
+});	   	
+
+    </script>
+</dom-module>
+
+
+
+
+

@@ -1,0 +1,110 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-text-behavior.html">
+
+<script type="text/javascript" src="../../bootstrap/bootstrap.typeahead-1.2.2/bootstrap.typeahead.js"></script>	
+
+<dom-module id="top-textfield">
+  <template>
+		<style>
+			.typeahead {
+			  margin-top: 2px;
+			  -webkit-border-radius: 4px;
+			     -moz-border-radius: 4px;
+			          border-radius: 4px;
+			}
+		</style>
+
+		<input type="text" value="{{text::input}}" id="{{id}}" placeholder="{{hint}}" name="{{name}}" align="{{layoutHorizontalAlignment}}" onclick="{{eventMouseClick}}" onmouseenter="{{eventMouseEnter}}" onmouseleave="{{eventMouseExit}}" onmousemove="{{eventMouseMove}}" onmousedown="{{eventMousePressed}}" onmouseup="{{eventMouseReleased}}" onkeydown="{{eventKeyPressed}}" onkeypress="{{eventKeyTyped}}" onkeyup="{{eventKeyReleased}}" 
+		 onfocus="{{eventFocused}}" onblur="{{eventLostFocused}}" style$="{{topstyle}}" >
+  </template>
+</dom-module>
+
+<script>
+TopTextfield = Polymer({
+	is : "top-textfield",
+	behaviors : [TopWidgetBehavior, TopTextBehavior],
+	properties: {
+		password : {
+			type : String,
+			observer : 'passwordChanged'
+		},
+		hint : {
+			type : String,
+			observer : "hintChanged"
+		},
+		autoComplete : {
+			type : String,
+			reflectToAttribute : true,
+			observer : "autoCompleteChanged"
+		},
+		disabled : {
+			type : String,
+			reflectToAttribute : true,
+			observer : "disabledChanged"
+		}	
+    },
+	
+	disabledChanged : function(newValue){
+		var shadowInput = Polymer.dom(this.root).querySelector('input');
+			
+		if(this.disabled =="true" || this.disabled ==true ){
+			$(shadowInput).attr("disabled", "true");
+		}else{
+			$(shadowInput).removeAttr("disabled");
+		};
+		
+		this.updateModelbyWidget("disabled");
+	},
+	
+	passwordChanged : function(newValue){
+		var shadowInput = Polymer.dom(this.root).querySelector('input');
+		
+		if(newValue == "true" || newValue == true){
+			$(shadowInput).attr("type", "password");
+		}else{
+			$(shadowInput).attr("type", "text");
+		};
+		
+		this.updateModelbyWidget("password");
+	},
+	
+	hintChanged : function(newValue){
+		this.updateModelbyWidget("hint");
+	},
+	
+	autoCompleteChanged : function(newValue){
+		var shadowInput = Polymer.dom(this.root).querySelector('input');
+		
+		if(typeof newValue == "string"){ // Type Ahead Function Call, autoComplete '[list]'value 
+			var sources = this.autoComplete.split(",");	
+			var sourceArray =[];
+			var tempObj = {};
+			
+			for(var i=0; i<sources.length; i++){
+				tempObj = {};
+				tempObj["id"] = i;
+				tempObj["name"] = sources[i];
+				
+				sourceArray[i] = tempObj;
+				
+			};
+			
+			
+			 $(shadowInput).typeahead({
+		        source: sourceArray,
+				shadowRoot : this
+		    });
+			
+			this.updateModelbyWidget("autoComplete");
+		}
+	},
+	
+	ready: function(){
+		this.updateValue();
+	}
+
+});	
+</script>
+
+
+

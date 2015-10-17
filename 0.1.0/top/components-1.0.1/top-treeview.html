@@ -1,0 +1,197 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-group-behavior.html">
+
+<link rel="stylesheet" href="../../jquery/jquery.jstree-3.2.1/themes/default/style.css">
+
+<script src="../../jquery/jquery.jstree-3.2.1/jquery.jstree.js" type="text/javascript"></script>
+	
+<dom-module id="top-treeview">	
+   <template>
+			<div class="treeview1"  style$="{{topstyle}}">
+						<content></content>
+			</div>
+   </template>
+  		
+   <script>
+TopTreeview = Polymer({
+		is : "top-treeview", 
+		behaviors : [TopWidgetBehavior, TopGroupBehavior],
+		properties :{
+			childCount: {
+				type: String,
+				value: "false"
+			},
+			
+			parentIcon  : String,
+			childIcon : String,
+			dataSource : Array,
+			eventNodeSelected :{
+				type : String,
+				observer : 'nodeSelecteChanged'
+			} 
+		},
+		
+		nodeSelecteChanged: function(newValue){
+			if(typeof newValue =="string")
+				this.eventNodeSelected = Top.Util.namespace(newValue);	
+		},
+		
+		ready: function(){
+			this.initItems();
+			this.updateValue();
+		},
+		
+		makeTreeArray : function(item){
+			if(!item.id) {
+				item.id = Top.Util.guid();
+			}
+			
+			var nodeObject ={};
+			var childNodeArray = [];
+			
+			nodeObject["id"] = item.id;
+			
+			if (item.getAttribute("text") != null) {
+				nodeObject["text"] = item.getAttribute("text");
+			}else if(item.text != null){
+				nodeObject["text"] = item.text;
+			};
+				
+			var subItems =$("#"+item.id).children();
+	
+			if (subItems.length != 0) {
+					for (var i = 0; i < subItems.length; i++) {
+					
+						if ($("#" + subItems[i].id).children().length != 0) {
+							childNodeArray[i] = this.makeTreeArray(subItems[i]);
+							
+						}
+						else {
+							childNodeArray[i] = this.makeTreeArray(subItems[i]);
+						};
+					};
+				
+			}else if(item.subItems != undefined){
+				subItems = item.subItems;
+				
+				
+				for (var i = 0; i < subItems.length; i++) {
+					
+						if (subItems[i].subItems.length != 0) {
+							childNodeArray[i] = this.makeTreeArray(subItems[i]);
+							
+						}
+						else {
+							childNodeArray[i] = this.makeTreeArray(subItems[i]);
+						};
+				};
+				
+			};
+			
+			if (childNodeArray.length != 0) {
+				nodeObject["children"] = childNodeArray;
+				
+				if(this.childCount)
+					nodeObject["text"] = nodeObject["text"] + "("+ childNodeArray.length + ")";
+					 
+				return nodeObject;
+				
+			}else {
+				if(this.childCount)
+					nodeObject["text"] = nodeObject["text"] + "("+ childNodeArray.length + ")";
+					
+				return nodeObject;				 
+			}
+				
+			
+		},
+		
+ 		updateValue : function(){
+				this.clearItems();
+				var  treeArray=[];
+								
+				if(this.childCount =="false")
+					this.childCount = false;
+					
+				for (var i = 0; i < this.items.length; i++) {
+						this.appendChild(this.items[i]);
+						
+				};	
+					
+				if(this.items.length != 0) {
+					 	for (var i = 0; i < this.items.length; i++) {
+					 		treeArray[i] = this.makeTreeArray(this.items[i]);
+						};
+				};
+				
+				if(this.dataSource != null ){
+					treeArray = this.dataSource;
+					if (this.childCount) {
+						for (var i = 0; i < treeArray.length; i++) {
+							var target = treeArray[i]["id"];
+							var count = 0;
+							for (var j = 0; j < treeArray.length; j++) {
+								if (target == treeArray[j]["parent"]) {
+									count = count + 1;
+								};
+							};
+							treeArray[i]["text"] = treeArray[i]["text"] + "(" + count + ")";
+						};
+					};				
+				};
+				
+				if(typeof this.eventNodeSelected == 'function' ){
+						var selectFunction = this.eventNodeSelected;
+								
+				};
+				
+			
+				var shadowRoot = Polymer.dom(this.root).querySelector('.treeview1'); 
+				$(shadowRoot).on('changed.jstree', function (e, data) {
+					var widgetItem = Top.Dom.selectById(data.node.id);
+					var func = Top.Util.namespace(widgetItem.getProperties("eventMouseClick"));
+					if(func) func();
+					if(typeof selectFunction  == 'function')
+						selectFunction(widgetItem);
+  				});
+			
+
+			
+				$(shadowRoot).jstree({ 'core' : {
+												    'data' : treeArray
+												} 
+				});
+				
+				
+				
+				
+	
+		},
+		
+		closeAll : function(){
+			var shadowRoot = Polymer.dom(this.root).querySelector('.treeview1'); 
+			
+			$(shadowRoot).jstree().close_all();
+			
+		},
+		
+		openAll : function(){
+			var shadowRoot = Polymer.dom(this.root).querySelector('.treeview1'); 
+				$(shadowRoot).jstree().open_all();
+				
+		}
+		
+	
+			
+			
+		
+	
+});	   	
+
+    </script>
+</dom-module>
+
+
+
+
+

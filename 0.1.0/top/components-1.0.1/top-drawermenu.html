@@ -1,0 +1,210 @@
+<link rel="import" href="../components-1.0.1/top-menu-behavior.html">
+
+<!-- drawer js -->
+<script src="../../jquery/jquery.drawer-2.4.0/jquery.drawer.js"></script>
+<link rel="stylesheet" href="../../jquery/jquery.drawer-2.4.0/jquery.drawer.css">
+<script src="../../jquery/jquery.drawer-2.4.0/iscroll.lite.js"></script>
+<script src="../../jquery/jquery.drawer-2.4.0/dropdown.js"></script>	
+	
+	
+	
+<dom-module id="top-drawermenu">	
+   <template>
+   
+		<content></content>
+  
+	</template>
+ 
+   <script>
+TopDrawermenu = Polymer({
+			is : "top-drawermenu",
+			behaviors : [TopMenuBehavior],
+
+			ready: function(){
+				this.initialMenuItems();
+				this.renderMenu();	
+		
+			},
+			
+			parseSubMenu : function(ul, menu){
+				 var li;
+				 
+				for (var i=0;i<menu.length;i++) {
+				
+					if (menu[i].subMenu !=null) {
+						li= $(ul).append("<li class='drawer-menu-item dropdown drawer-dropdown'><a href='#' data-toggle='dropdown' class='sub-menu' role='button' aria-expanded='false'>"+menu[i].text+"<span class='caret'></span></a></li>");	
+						li = $(li).find("li")
+					
+			            var subul=$('<ul class="drawer-submenu dropdown-menu" role="menu"></ul>');
+			            $(li).append(subul);
+						
+			            this.parseSubMenu($(subul), menu[i].subMenu);
+			        }else{
+							if(menu[i].href) {
+								li= $(ul).append("<li class='drawer-submenu-item'><a href='"+menu[i].href+"'>"+menu[i].text+"</a></li>");
+							}else if(menu[i].route) {
+								li= $(ul).append("<li class='drawer-submenu-item'><a href='javascript:Top.App.routeTo(\""+menu[i].route+"\")'>"+menu[i].text+"</a></li>");
+							};
+					};
+					
+				};
+				
+			},
+			
+			
+			parseMenu : function (ul, menu) {
+			    var li;
+				
+				
+				for (var i=0;i<menu.length;i++) {
+				
+					if (menu[i].subMenu !=null) {
+						li= $(ul).append("<li class='drawer-menu-item dropdown drawer-dropdown'><a href='#' data-toggle='dropdown' class='sub-menu' role='button' aria-expanded='false'>"+menu[i].text+"<span class='caret'></span></a></li>");	
+						li = $(li).find("li")
+					
+			            var subul=$('<ul class="drawer-submenu dropdown-menu" role="menu"></ul>');
+			            $(li).append(subul);
+						
+			            this.parseSubMenu($(subul), menu[i].subMenu);
+			        }else{
+						if(menu[i].href) {
+							li= $(ul).append("<li class='drawer-menu-item'><a href='"+menu[i].href+"'>"+menu[i].text+"</a></li>");
+						}else if(menu[i].route) {
+							li= $(ul).append("<li class='drawer-menu-item'><a href='javascript:Top.App.routeTo(\""+menu[i].route+"\")'>"+menu[i].text+"</a></li>");
+						};
+						
+					};
+					
+				};
+			 
+				
+			},
+			
+			
+				
+			
+			makeMenuArray : function(item){
+				var nodeObject ={};
+				var childNodeArray = [];
+			
+				var href= "";
+				var name = "";
+				var route = "";
+				
+				
+				if (item.getAttribute("href") != null) {
+					nodeObject["href"] = item.getAttribute("href");
+				}else if(item.href != null){
+					nodeObject["href"] = item.href;
+				};
+				
+				if (item.getAttribute("route") != null) {
+					nodeObject["route"] = item.getAttribute("route");
+				}else if(item.href != null){
+					nodeObject["route"] = item.route;
+				};
+				
+				if (item.getAttribute("text") != null) {
+					nodeObject["text"] = item.getAttribute("text");
+				}else if(item.href != null){
+					nodeObject["text"] = item.text;
+				};	
+				
+						
+				var subItems =$("#"+item.id).children();
+		
+				if (subItems.length != 0) {
+						for (var i = 0; i < subItems.length; i++) {
+						
+							if ($("#" + subItems[i].id).children().length != 0) {
+								childNodeArray[i] = this.makeMenuArray(subItems[i]);
+								
+							}
+							else {
+								childNodeArray[i] = this.makeMenuArray(subItems[i]);
+							};
+						};
+				}else if(item.subMenuItems  != undefined){
+					subItems = item.subMenuItems;
+					
+					for (var i = 0; i < subItems.length; i++) {
+						
+							if (subItems[i].subMenuItems.length != 0) {
+								childNodeArray[i] = this.makeMenuArray(subItems[i]);
+								
+							}
+							else {
+								childNodeArray[i] = this.makeMenuArray(subItems[i]);
+							};
+					};
+					
+				};
+				
+				
+				
+				if (childNodeArray.length != 0) {
+					nodeObject["subMenu"] = childNodeArray;
+				//	console.log(nodeObject["subMenu"]);
+					return nodeObject;	
+				}else {
+					return nodeObject;
+					 
+				};
+			
+			
+			},
+			
+			renderMenu : function(){
+
+				this.clearMenuItems();
+				this.menuArray = [];
+		
+				for (var i = 0; i < this.menuItems.length; i++) {
+						this.appendChild(this.menuItems[i]);
+						
+				};	
+			
+			
+				if(this.menuItems != null) {
+					 	for (var i = 0; i < this.menuItems.length; i++) {
+					 		this.menuArray[i] = this.makeMenuArray(this.menuItems[i]);
+						}
+				};
+				
+				this.clearMenuItems();
+				
+				var ul = $("<ul class='drawer-menu'></ul>");
+				this.parseMenu(ul, this.menuArray);
+				
+				
+				$(this).append(ul);
+				$(this.querySelector("ul")).wrap("<div  class='drawer drawer-right'><header role='banner'><div class='drawer-main drawer-default'><nav class='drawer-nav' role='navigation'></nav></div></header></div>");	
+				$(this.querySelector("#" + this.id + " .drawer-main")).before("<div class='drawer-header'><button type='button' class='drawer-toggle drawer-hamburger'><span class='sr-only'>toggle navigation</span><span class='drawer-hamburger-icon'></span></button></div>");	
+				$(this.querySelector("#" + this.id + " .drawer")).drawer();
+						
+		
+	
+	
+			},
+			
+			open : function() {
+				$("#" + this.id + " .drawer").drawer('open');
+			},
+			
+			close : function() {
+				$("#" + this.id + " .drawer").drawer('close');
+			},
+			
+			toggle : function() {
+				$("#" + this.id + " .drawer").drawer('toggle');
+			}
+			
+		});
+   </script>
+
+
+
+</dom-module>
+
+
+

@@ -1,0 +1,102 @@
+// TOP Web Framework 
+// Button  : Button and Image button (Base Bootstrap : http://getbootstrap.com) 
+// Base style Sheets Less File version 1.0.1--------------------------------------
+
+
+// Base styles
+// --------------------------------------------------
+
+top-button::shadow input[type = "button"], top-imagebutton::shadow input[type="image"]{
+  display: inline-block;
+  margin-bottom: 0; // For input.btn
+  font-weight: @btn-font-weight;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+  border: 1px solid transparent;
+  white-space: nowrap;
+  .button-size(@padding-base-vertical; @padding-base-horizontal; @font-size-base; @line-height-base; @btn-border-radius-base);
+  .user-select(none);
+
+  &,
+  &:active,
+  &.active {
+    &:focus,
+    &.focus {
+      .tab-focus();
+    }
+  }
+
+  &:hover,
+  &:focus,
+  &.focus {
+    color: @btn-default-color;
+    text-decoration: none;
+  }
+
+  &:active,
+  &.active {
+    outline: 0;
+    background-image: none;
+    .box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
+  }
+
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    cursor: @cursor-disabled;
+    .opacity(.65);
+    .box-shadow(none);
+  }
+
+  a& {
+    &.disabled,
+    fieldset[disabled] & {
+      pointer-events: none; // Future-proof disabling of clicks on `<a>` elements
+    }
+  }
+}
+// Button Type 
+
+top-button::shadow input[type = "button"], top-imagebutton::shadow button {
+  .button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
+}
+
+top-button::shadow input[type = "button"], top-imagebutton::shadow button {
+  .button-variant(@btn-default-color; @btn-default-bg; @btn-default-border);
+}
+
+
+top-button.primary::shadow input[type = "button"], top-imagebutton.primary::shadow button {
+   .button-variant(@btn-primary-color; @btn-primary-bg; @btn-primary-border);
+}
+
+top-button.success::shadow input[type = "button"], top-imagebutton.success::shadow button{
+    .button-variant(@btn-success-color; @btn-success-bg; @btn-success-border);
+}
+
+top-button.info::shadow input[type = "button"], top-imagebutton.info::shadow button{
+   .button-variant(@btn-info-color; @btn-info-bg; @btn-info-border);
+}
+
+top-button.warning::shadow input[type = "button"], top-imagebutton.warning::shadow button{
+    .button-variant(@btn-warning-color; @btn-warning-bg; @btn-warning-border);
+}
+
+top-button.danger::shadow input[type = "button"], top-imagebutton.danger::shadow button{
+    .button-variant(@btn-danger-color; @btn-danger-bg; @btn-danger-border);
+}
+
+
+
+
+
+
+
+
+
+
+
+

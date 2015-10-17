@@ -1,0 +1,63 @@
+<!-- 
+	TmaxSoft One Platform Web Framework Version 1.0.1
+	TOP Range Behavior : Progressbar and Slider Properties and Function
+-->
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+<script>
+	TopRangeBehavior = {
+		properties: {
+			progress :{
+				type : Number,
+				observer : "progressChanged",
+				value : 0.5
+			},
+			max : {
+				type : Number,
+				value : 100,
+				observer : "progressChanged"
+			},
+			number : {
+				type : Number,
+				observer : 'numberChanged',
+				value : 1
+			},
+			step : {
+				type : Number,
+				value : 1,
+				observer : "stepChanged"
+			}		
+		},
+	
+		numberChanged : function(newValue){					
+			if(newValue <= this.max){
+				newValue = Math.round(newValue/this.step)*this.step;	
+				this.value = this.number;
+				
+				this.updateModelbyWidget("number");
+			};
+		},
+		
+		progressChanged : function(newValue){
+			if (newValue <= 1 && newValue >= 0) {
+				this.updateModelbyWidget("progress");
+			}else{
+				this.progress = 0.5;	
+				this.updateModelbyWidget("progress");
+			};
+		},
+		
+		stepChanged : function(newValue){
+				this.updateModelbyWidget("step");
+		},
+		
+		maxChanged : function(newValue){
+				this.updateModelbyWidget("max");
+		}
+		
+		
+	};
+  </script>
+
+
+

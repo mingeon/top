@@ -1,0 +1,221 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<script src="../../bootstrap/bootstrap.notify-3.1.3/bootstrap.notify.js"></script>
+
+<dom-module id="top-notification">
+   <template>
+   </template>
+	
+   <script>
+TopNotification = Polymer({
+			is : "top-notification",
+			behaviors : [TopWidgetBehavior],
+			properties: {
+				icon : {
+					type : String,
+					observer : "iconChanged"				
+				},
+				title : {
+					type : String,
+					observer : "titleChanged"				
+				},
+			    message : {
+					type : String,
+					observer : "messageChanged"				
+				},
+				url : {
+					type : String,
+					observer : "urlChanged"				
+				},
+				target : {
+					type : String,
+					value : "_blank",
+					observer : "targetChanged"
+				},
+				element : {
+					type : String,
+					observer : "elementChanged"
+				},
+				type : {
+					type : String,
+					value : "info"
+				},
+				position : {
+					type : String,
+					value : null
+				},
+				placement : {
+					type : Object,
+					value : {
+						from :"top",
+						align : "center"
+					},
+					observer : "placementChanged"
+				},
+				offset : {
+					type : Number,
+					value : 0				
+				},
+				
+				delay : {
+					type : Number,
+					value : 0	
+				},
+				notification : {
+					type : Object,
+					value : null
+				}
+			},
+			
+			placementChanged : function(newValue){
+				if(typeof newValue === "string"){
+					switch(newValue){
+						case "tl" :
+							this.placement = {
+								from : "top",
+								align : "left"
+							}; 
+							break;
+						case "tc" :
+							this.placement = {
+								from : "top",
+								align : "center"
+							};
+							break;
+						case "tr" : 
+							this.placement = {
+								from : "top",
+								align : "right"
+							};
+							break;		
+						case "bl" :
+							this.placement = {
+								from : "bottom",
+								align : "left"
+							}; 
+							break;
+						case "bc" :
+							this.placement = {
+								from : "bottom",
+								align : "center"
+							};
+							break;
+						case "br" : 
+							this.placement = {
+								from : "bottom",
+								align : "right"
+							};
+							break;	
+					}
+				};
+				
+				if(this.notification != null){
+					this.setPlacement(newValue);
+				};
+				
+				this.updateModelbyWidget("placement");
+			},
+			
+			iconChanged : function(newValue){
+				if(this.notification != null){
+					this.setIcon(newValue);
+				};
+				this.updateModelbyWidget("icon");	
+			},
+			
+			titleChanged : function(newValue){
+				if(this.notification != null){
+					this.setTitle(newValue);
+				};
+				this.updateModelbyWidget("title");	
+			},
+			
+			messageChanged : function(newValue){
+				if(this.notification != null){
+					this.setMessage(newValue);
+				};
+				this.updateModelbyWidget("message");	
+			},
+			
+			urlChanged : function(newValue){
+				if(this.notification != null){
+					this.setUrl(newValue);
+				};
+				this.updateModelbyWidget("url");	
+			},
+			
+			targetChanged : function(newValue){
+				if(this.notification != null){
+					this.setTarget(newValue);
+				};
+				this.updateModelbyWidget("target");	
+			},
+			
+			ready: function() {
+				
+				this.updateValue();
+				
+	     	},
+			
+			updateValue : function(){
+				this.notification = $.notify({
+					// options
+					icon: this.icon,
+					title: this.title,
+					message: this.text,
+					url: this.url,
+					target: this.target
+				},{
+					// settings
+					element : this.element,
+					position: this.position,
+					type: this.type,
+					placement: this.placement,
+					offset: this.offset,
+					delay : this.delay
+					
+				});
+			},
+			
+			setTitle : function(title){
+				if(this.notification != null){
+					this.notification.update('title', title);
+				} 
+			},
+			setIcon : function(icon){
+				if(this.notification != null){
+					this.notification.update('icon', icon);
+				} 
+			} ,
+			setType : function(type){
+				if(this.notification != null){
+					this.notification.update('type', type);
+				} 
+				
+			},
+			setUrl  :function(url){
+			 	if(this.notification != null){
+					this.notification.update('url', url);
+				} 
+				
+			},
+			setTarget : function(target){
+				if(this.notification != null){
+					this.notification.update('target', target);
+				} 
+			},
+			setMessage : function(message){
+				if(this.notification != null){
+					this.notification.update('message', message);
+				} 
+			},
+			setPlacement : function(placement){
+				if(this.notification != null){
+					this.notification.update('placement', placement);
+				};
+			}
+		});
+   </script>
+
+</dom-module>
+
+

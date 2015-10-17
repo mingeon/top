@@ -1,0 +1,48 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-layout-behavior.html">
+
+<dom-module id="top-framelayout">	
+   <template>	
+   	<div id="{{id}}" name="{{name}}" style$="{{topstyle}}">
+		<content>
+		</content>
+  	</div>
+  </template>
+   <script>
+TopFramelayout = Polymer({
+			is : "top-framelayout",
+			behaviors : [TopWidgetBehavior, TopLayoutBehavior],
+			
+		
+					
+			ready: function(){
+				
+				this.initialChilds();
+				this.updateStyle();
+				this.renderLayout();
+				
+				
+			},
+			
+			renderLayout : function(){
+				this.clearChilds();
+				
+				for(var i=0; i<this.childs.length; i++)
+					this.appendChild(this.childs[i]);
+			
+				var layout_children =this.childs;
+					
+				for(var i=0; i<layout_children.length; i++){
+					$(layout_children[i]).wrap("<div style='position: absolute;'></div>")
+				};
+			}
+
+		});
+   </script>
+
+
+
+</dom-module>
+
+
+

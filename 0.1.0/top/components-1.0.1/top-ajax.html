@@ -1,0 +1,40 @@
+<dom-module id="top-ajax">
+	<template>
+		<div id="{{id}}">
+			<content></content>
+		</div>
+	</template>
+	
+	<script>
+		TopAjax = Polymer({
+			is : "top-ajax",
+			
+			properties : {
+				id : String,
+				url : String,
+				type : String,
+				settings : Object,
+				request : String,
+				response : String,
+				onSuccess : String,
+				onFail : String
+			},
+			
+			execute : function() {
+				if(this.type == "request") {
+					Top.Ajax.request(this.url, this.settings);
+				} else if(this.type == "get") {
+					successFunc = Top.Ajax.getSuccessFunc(this.id, this.onSuccess, this.response);
+					failFunc = Top.Ajax.getFailFunc(this.id, this.onFail);
+					Top.Ajax.get(this.url, this.request, this.response, successFunc, failFunc);
+				} else if(this.type == "post") {
+					successFunc = Top.Ajax.getSuccessFunc(this.id, this.onSuccess, this.response);
+					failFunc = Top.Ajax.getFailFunc(this.id, this.onFail);
+					Top.Ajax.post(this.url, this.request, this.response, successFunc, failFunc);
+				} else {
+					console.log("unknown type");
+				}
+			}
+		});
+	</script>
+</dom-module>

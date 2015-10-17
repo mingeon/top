@@ -1,0 +1,19 @@
+<link rel="import" href="../../polymer/polymer-1.0/polymer.html">
+
+<script>
+	TopResourceBehavior = {
+		properties: {
+				src: {
+					type : String,
+					observer: 'srcChanged'
+				},				
+		},
+	
+		srcChanged : function(newValue){		
+			this.updateModelbyWidget("src");
+		}
+	};
+</script>
+
+
+

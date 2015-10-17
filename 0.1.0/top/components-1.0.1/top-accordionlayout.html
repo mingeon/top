@@ -1,0 +1,87 @@
+<link rel="import" href="../components-1.0.1/top-widget-behavior.html">
+<link rel="import" href="../components-1.0.1/top-layout-behavior.html">
+
+
+<script src="../../jquery/jquery.ui-1.11.4/jquery.ui.accordion.js"></script>
+
+<dom-module id="top-accordionlayout">	
+	
+
+   <template>	  
+		<div id="{{id}}" name="{{name}}" align="{{layoutHorizontalAlignment}}" style$="{{topstyle}}">
+			<content>
+			</content>
+		</div>
+  </template>
+  
+   <script>
+	TopAccordionlayout = Polymer({
+			is : "top-accordionlayout",
+			behaviors : [TopWidgetBehavior, TopLayoutBehavior],
+
+			factoryImpl: function(id) {
+			    	this.id = id;
+			},	
+				
+			ready: function(){
+				
+				this.initialChilds();
+				this.renderLayout();
+			
+			},
+			
+			
+			
+			
+			renderLayout : function(){
+					this.clearChilds();
+					
+					var layout_children =this.childs;	
+					
+					var tabNameHeaderTag="<ul>"; 
+					for(var i=0; i<layout_children.length; i++){
+						
+						var layoutTabName ="";
+						
+						if (layout_children[i].getAttribute('layout-tab-name') != null) {
+							layoutTabName = layout_children[i].getAttribute('layout-tab-name');
+							//layoutTabName = this.childs[i].getAttribute('layout-tab-name');
+						}else {
+							layoutTabName = layout_children[i].layoutTabName;
+							
+						};
+						
+						
+						$(this).append("<h3>"+layoutTabName+"</h3>");
+						$(this).append(layout_children[i]);
+	
+						$(layout_children[i]).wrap("<div id='"+layoutTabName+"'></div>");
+						
+						if(i == (layout_children.length-1)){
+							$(this).children().wrapAll("<div class='accordion'></div>");
+							$(this.querySelector(".accordion")).accordion({
+							    heightStyle: 'panel',
+								collapsible: true,
+							    autoHeight: false,
+							    navigation: true 
+							});
+			
+						};
+				
+					};
+					
+				
+					
+							
+			}
+				
+				
+		});
+   </script>
+
+
+
+</dom-module>
+
+
+
